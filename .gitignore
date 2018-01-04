@@ -36,3 +36,8 @@ build
 
 #output terminal log
 *.dump
+
+#vs code
+.vscode
+
+iec_compiler

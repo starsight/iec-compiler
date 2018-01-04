@@ -408,8 +408,8 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
 
   	for(int i = 0; i < symbol->n; i++) {//todo
     //if(symbol->elements[i]!=NULL){
-      std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
-    //  return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
+      //std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+      return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
     //}
   	}
   	return NULL; 

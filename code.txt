@@ -15,10 +15,10 @@ tds_interval       8000000
 tds_sp_size        256
 tds_cs_size        3
 tds_pou_count      1
-tds_const_count    2
-tds_global_count   2
+tds_const_count    5
+tds_global_count   1
 tds_refval_count   1
-tds_inst_count     9
+tds_inst_count     15
 
 # OBJ POU Description Segment
 pds_name           MAIN
@@ -27,27 +27,35 @@ pds_instance       0
 pds_input_count    0
 pds_inout_count    0
 pds_output_count   0
-pds_local_count    5
+pds_local_count    10
 pds_entry          0
 
 # OBJ PLC Task Constant Segment
 K TUINT 0
 K TUINT 5
+K TUINT 1
+K TUINT 4
+K TUINT 12
 
 # OBJ PLC Task Global Variables Segment
 G TINT 0
-G TINT 0
 
 # OBJ PLC Task Reference Variables Segment
-S TU TUINT 0 TUINT 0 TINT 0 TUINT 0 TINT 0 TINT 1 TINT 0
+S TU TUINT 0 TUINT 0 TINT 3 TUINT 0 TINT 0 TINT 1 TINT 0
 
 # OBJ PLC Task Code Segment
 I gload 0 0
-I gload 1 1
-I kload 2 0
-I kload 3 1
-I getfield 4 2 3
-I mov 1 4 0
+I kload 1 0
+I kload 2 1
+I getfield 3 1 2
+I mov 0 3 0
+I kload 4 2
+I kload 5 0
+I getfield 6 4 5
+I mov 0 6 0
+I kload 7 2
+I kload 8 3
+I kload 9 4
+I setfield 9 7 8
 I gstore 0 0
-I gstore 1 1
 I halt 0 0 0
