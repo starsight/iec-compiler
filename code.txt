@@ -50,7 +50,7 @@ I kload 2 1
 I getfield 3 1 2
 I mov 0 3 0
 I kload 4 2
-I kload 5 0
+I kload 5 2
 I getfield 6 4 5
 I mov 0 6 0
 I kload 7 2

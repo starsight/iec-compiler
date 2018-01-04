@@ -22,7 +22,7 @@ TYPE AI:
 END_TYPE
 
 TYPE AI2:
-  ARRAY[0..2,0..2] OF INT := [4(1024), 2(-1024)];
+  ARRAY[0..2,0..3,0..1] OF INT := [4(1024), 2(-1024)];
 END_TYPE
 
 PROGRAM MAIN 
@@ -34,7 +34,7 @@ PROGRAM MAIN
   END_VAR
 
   RETS := INPUT.AB.A;
-  RETS := ARR2[0,2];
+  RETS := ARR2[1,2,2];
   ARR2[4] :=12;
 
  

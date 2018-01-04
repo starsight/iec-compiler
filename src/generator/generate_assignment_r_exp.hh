@@ -22,7 +22,7 @@ private:
     pre_generate_pou_info_c *pou_info;
     bool innerflag;
 	std::string innerString;//struct递归
-	int array_index=0;
+	int array_type_index=0;
 
 public:
 	generate_assign_r_exp_c(pre_generate_pou_info_c* pou_info_param):innerflag(false) {
@@ -32,8 +32,8 @@ public:
 
 private:
 	int cal_array_offset_helper(symbol_c *elements);
-	int cal_array_offset_multi_helper(vector<int> each_row_count,int from);
-	int cal_array_offset(vector<int> each_row_count,subscript_list_c *symbol);
+	int cal_array_offset_multi_helper(std::vector<int> each_row_count,int from);
+	int cal_array_offset(std::vector<int> each_row_count,subscript_list_c *symbol);
 	
 	/*******************************************/
 	/* B 1.1 - Letters, digits and identifiers */
