@@ -90,7 +90,7 @@ void symtable_c<value_type>::insert(const char *identifier_str, value_t new_valu
     inner_scope->insert(identifier_str, new_value);
     return;
   }
-
+  // std::cout << "insert identifier_str " << identifier_str << " value = "<< new_value << std::endl;
   // std::cout << "store_identifier(" << identifier_str << "): \n";
   iterator i = _base.find(identifier_str);
   if ((i != _base.end()) && (i->second != new_value)) {ERROR;}  /* error inserting new identifier: identifier already in map associated to a different value */

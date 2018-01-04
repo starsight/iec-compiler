@@ -1,0 +1,397 @@
+
+____program_declaration_c____
+=====================
+=====================
+0x9bc6280:MAIN
+=====================
+0x9bc51c8:AI
+0x9bc3a88:TU
+0x9bc3270:TUM
+=====================
+
+____library_c____
+
+____data_type_declaration_c____
+TYPE
+
+____type_declaration_list_c____
+  
+____structure_type_declaration_c____
+
+____identifier_c(generate_struct_c.cc)____
+ : 
+____structure_element_declaration_list_c(generate_struct.cc)____
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+
+____integer_c(generate_struct_c.cc)____
+INT 1
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+INT 0
+struct name: TUM
+IValue name: A type: TINT  value: 1
+IValue name: B type: TINT  value: 0
+struct size(generate_iec.cc) = 1
+;
+END_TYPE
+
+
+
+____data_type_declaration_c____
+TYPE
+
+____type_declaration_list_c____
+  
+____structure_type_declaration_c____
+
+____identifier_c(generate_struct_c.cc)____
+ : 
+____structure_element_declaration_list_c(generate_struct.cc)____
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____bool_type_name_c____
+BOOL 0
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____bool_type_name_c____
+BOOL 0
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+INT 0
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____bool_type_name_c____
+BOOL 0
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+INT 0
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____initialized_structure_c(generate_struct_c.cc)____
+
+____derived_datatype_identifier_c(generate_struct_c.cc)____
+name = TUM
+TUM 0
+
+____structure_element_declaration_list_c(generate_struct.cc)____
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+
+____integer_c(generate_struct_c.cc)____
+INT 1
+
+____structure_element_declaration_c(generate_struct.cc)____
+
+____identifier_c(generate_struct_c.cc)____
+
+____simple_spec_init_c(generate_struct_c.cc)____
+
+____int_type_name_c____
+INT 0
+struct name: TU
+IValue name: CU type: TUINT value: 0
+IValue name: R type: TUINT value: 0
+IValue name: PV type: TINT  value: 0
+IValue name: Q type: TUINT value: 0
+IValue name: CV type: TINT  value: 0
+IValue name: ABA type: TINT  value: 1
+IValue name: ABB type: TINT  value: 0
+struct size(generate_iec.cc) = 2
+;
+END_TYPE
+
+
+
+____data_type_declaration_c____
+TYPE
+
+____type_declaration_list_c____
+  
+____array_type_declaration_c(generate_iec.cc)____
+
+____identifier_c____
+ : 
+____array_spec_init_c(generate_array.cc)____
+
+____array_specification_c(generate_array.cc)____
+
+____array_subrange_list_c(generate_array.cc)____
+
+____subrange_c(generate_array.cc)____
+
+____integer_c____
+
+____integer_c____
+########################
+
+____int_type_name_c____
+########################
+
+____array_initial_elements_list_c(generate_array.cc)____
+
+____array_initial_elements_c(generate_array.cc)____
+
+____integer_c____
+
+____integer_c____
+OK
+
+____array_initial_elements_c(generate_array.cc)____
+
+____integer_c____
+
+____neg_integer_c____
+
+____integer_c____
+OK
+8 : 8
+;
+END_TYPE
+
+
+
+____program_declaration_c____
+PROGRAM 
+____poutype_identifier_c____
+MAIN
+
+____var_declarations_list_c____
+
+____var_declarations_c____
+
+____var_init_decl_list_c____
+
+____structured_var_init_decl_c(generate_pou_var_declaration.cc)____
+
+____var1_list_c____
+
+____identifier_c____
+
+____initialized_structure_c____
+
+____derived_datatype_identifier_c____
+
+____var1_init_decl_c(generate_pou_var_declaration.cc)____
+
+____var1_list_c____
+
+____identifier_c____
+
+____simple_spec_init_c____
+
+____int_type_name_c____
+
+
+____statement_list_c____
+  
+____assignment_statement_c(generate_iec.cc)____
+
+____symbolic_variable_c____
+
+____identifier_c____
+ := 
+____structured_variable_c(generate_assignment_r_exp.cc)____
+
+____identifier_c(generate_assignment_r_exp.cc)____
+Q
+
+____symbolic_variable_c(generate_assign_r_exp_c)____
+
+____identifier_c(generate_assignment_r_exp.cc)____
+INPUT
+temp_str = INPUT
+record str = 0
+field_str = Q
+field_num = 3
+first time finish
+;
+END_PROGRAM(generate_iec.cc)
+
+
+
+____configuration_declaration_c____
+CONFIGURATION 
+____identifier_c____
+
+
+____global_var_declarations_list_c____
+
+____resource_declaration_list_c____
+
+____resource_declaration_c____
+
+____identifier_c____
+
+____identifier_c____
+
+____global_var_declarations_list_c____
+
+____single_resource_declaration_c____
+
+____task_configuration_list_c____
+
+____task_configuration_c____
+
+____identifier_c____
+
+____task_initialization_c____
+
+____duration_c____
+
+____interval_c____
+
+____integer_c____
+
+____integer_c____
+
+____program_configuration_list_c____
+
+____program_configuration_c____
+
+____identifier_c____
+
+____identifier_c____
+
+____poutype_identifier_c____
+END_CONFIGURATION
+
+
+
+|+++++++POU LIST INFO START++++++|
+pou number: 1
++--------------------------------+
+POU No.1
+
+++++++POU DETAIL INFO START++++++
+pou name: MAIN, pou type: PROG
+--------------VAR----------------
+input number: 0
+
+in_out number: 0
+
+output number: 0
+
+local number: 2
+IValue name: INPUT type: TINT  value: 0
+IValue name: RET type: TINT  value: 0
+
+constant number: 2
+IValue name:  type: TUINT value: 0
+IValue name:  type: TUINT value: 3
+
+------------Code-----------------
+inst number: 5
+1 : kload 2 0
+2 : kload 3 1
+3 : getfield 4 2 3
+4 : mov 1 4
+5 : halt 0 0 0
+
+++++++POU DETAIL INFO END++++++++
+
+
+|++++++++POU LIST INFO END+++++++|
+
+|++++CONFIGURATION INFO START++++|
+configuration name: MAIN_CONFIG
+
+-----CONFIGURATION GLOBAL VAR-----
+configuration global number: 0
+
+resource number: 1
+resource name: RES1 resource_typename : CPU1
+resource global var  number: 0
+
+resource global dir  number: 0
+
+task number: 1
+task name: fast, task interval: 8, task priority: 90, task signal: , task is signal? : false ; 
+
+program number: 1
+
+program name: P1, bind task name: fast
+program instance name: MAIN
+assign arguement number: 0
+sendto arguement number: 0
+
+|+++++CONFIGURATION INFO END+++++|
+
+|++++STRUCT_TYPE INFO START++++|
+struct name: TUM
+IValue name: A type: TINT  value: 1
+IValue name: B type: TINT  value: 0
+    --------------      
+struct name: TU
+IValue name: CU type: TUINT value: 0
+IValue name: R type: TUINT value: 0
+IValue name: PV type: TINT  value: 0
+IValue name: Q type: TUINT value: 0
+IValue name: CV type: TINT  value: 0
+IValue name: ABA type: TINT  value: 1
+IValue name: ABB type: TINT  value: 0
+    --------------      
+
+|++++STRUCT_TYPE INFO END++++++|
+
+|++++ARRAY_TYPE INFO START++++|
+array name: AI, type: , size: 8
+IValue name:  type: TINT  value: 1024
+IValue name:  type: TINT  value: 1024
+IValue name:  type: TINT  value: 1024
+IValue name:  type: TINT  value: 1024
+IValue name:  type: TINT  value: -1024
+IValue name:  type: TINT  value: -1024
+IValue name:  type: TINT  value: -1024
+IValue name:  type: TINT  value: -1024
+    --------------      
+
+|++++ARRAY_TYPE INFO END++++++|

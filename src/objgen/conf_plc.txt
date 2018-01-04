@@ -1,0 +1,33 @@
+# OBJ Header
+header_magic   MAGIC
+header_type    SYS_TYPE_32
+header_order   BYTE_ORDER_LIT
+header_version 1
+header_machine MACH_CORTEX_A8
+
+# OBJ I/O Configuration Segment
+iocs_update_interval 8000000
+iocs_ldi_count 3
+iocs_ldo_count 3
+iocs_lai_count 3
+iocs_lao_count 3
+iocs_rdi_count 0
+iocs_rdo_count 0
+iocs_rai_count 0
+iocs_rao_count 0
+
+# OBJ Servo Configuration Segment
+scs_axis_count 1
+scs_update_interval 8000000
+
+acs_name     axis1
+acs_id       1
+acs_type     AXIS_TYPE_FINITE
+acs_combined AXIS_INDEPENDENT
+acs_opmode   OPMODE_POS
+acs_min_pos  0.0
+acs_max_pos  180.0
+acs_max_vel  100.0
+acs_max_acc  20.0
+acs_max_dec  20.0
+acs_max_jerk 10.0

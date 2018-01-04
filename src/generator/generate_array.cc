@@ -7,7 +7,7 @@
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
 void *generate_array_c::visit(                 identifier_c *symbol) {
-    TRACE("identifier_c");
+    TRACE("identifier_c(generate_array.cc)");
     return strdup(symbol->value);
 }
 
@@ -270,11 +270,12 @@ void *generate_array_c::visit(simple_type_declaration_c *symbol) {
 
 /* simple_specification ASSIGN constant */
 void *generate_array_c::visit(simple_spec_init_c *symbol) {
-  TRACE("simple_spec_init_c");
+  TRACE("simple_spec_init_c(generate_array.cc)");
 #ifdef _CODE_GENERATOR
   var_type = (char*)symbol->simple_specification->accept(*this);
   if (symbol->constant != NULL) {
     var_value = (char*)symbol->constant->accept(*this);
+    std::cout<<"var_value = "<<var_value<<std::endl;
   } else {
     var_value = "0";
   }
@@ -290,7 +291,7 @@ void *generate_array_c::visit(simple_spec_init_c *symbol) {
 
 /*  subrange_type_name ':' subrange_spec_init */
 void *generate_array_c::visit(subrange_type_declaration_c *symbol) {
-  TRACE("subrange_type_declaration_c");
+  TRACE("subrange_type_declaration_c(generate_array.cc)");
   symbol->subrange_type_name->accept(*this);
 
   symbol->subrange_spec_init->accept(*this);
@@ -299,7 +300,7 @@ void *generate_array_c::visit(subrange_type_declaration_c *symbol) {
 
 /* subrange_specification ASSIGN signed_integer */
 void *generate_array_c::visit(subrange_spec_init_c *symbol) {
-  TRACE("subrange_spec_init_c");
+  TRACE("subrange_spec_init_c(generate_array.cc)");
   symbol->subrange_specification->accept(*this);
   if (symbol->signed_integer != NULL) {
 
@@ -310,7 +311,7 @@ void *generate_array_c::visit(subrange_spec_init_c *symbol) {
 
 /*  integer_type_name '(' subrange')' */
 void *generate_array_c::visit(subrange_specification_c *symbol) {
-  TRACE("subrange_specification_c");
+  TRACE("subrange_specification_c(generate_array.cc)");
   symbol->integer_type_name->accept(*this);
   if (symbol->subrange != NULL) {
 
@@ -322,7 +323,7 @@ void *generate_array_c::visit(subrange_specification_c *symbol) {
 
 /*  signed_integer DOTDOT signed_integer */
 void *generate_array_c::visit(subrange_c *symbol) {
-  TRACE("subrange_c");
+  TRACE("subrange_c(generate_array.cc)");
   symbol->lower_limit->accept(*this);
 
   array_type->size = std::stoi((char*)symbol->upper_limit->accept(*this)); //得到数组大小
@@ -366,7 +367,7 @@ void *generate_array_c::visit(enumerated_value_c *symbol) {
 
 /*  identifier ':' array_spec_init */
 void *generate_array_c::visit(array_type_declaration_c *symbol) {
-  TRACE("array_type_declaration_c");
+  TRACE("array_type_declaration_c(generate_array.cc)");
   symbol->identifier->accept(*this);
 
   symbol->array_spec_init->accept(*this);
@@ -376,7 +377,7 @@ void *generate_array_c::visit(array_type_declaration_c *symbol) {
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 void *generate_array_c::visit(array_spec_init_c *symbol) {
-  TRACE("array_spec_init_c");
+  TRACE("array_spec_init_c(generate_array.cc)");
   symbol->array_specification->accept(*this);
   if (symbol->array_initialization != NULL) {
 
@@ -387,7 +388,7 @@ void *generate_array_c::visit(array_spec_init_c *symbol) {
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *generate_array_c::visit(array_specification_c *symbol) {
-  TRACE("array_specification_c");
+  TRACE("array_specification_c(generate_array.cc)");
 
   symbol->array_subrange_list->accept(*this);
   std::cout << "########################" << std::endl;
@@ -400,7 +401,7 @@ void *generate_array_c::visit(array_specification_c *symbol) {
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
 void *generate_array_c::visit(array_subrange_list_c *symbol) {
-    TRACE("array_subrange_list_c");
+    TRACE("array_subrange_list_c(generate_array.cc)");
     print_list(symbol, "", ", ");
     return NULL;
 }
@@ -408,7 +409,7 @@ void *generate_array_c::visit(array_subrange_list_c *symbol) {
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 void *generate_array_c::visit(array_initial_elements_list_c *symbol) {
-    TRACE("array_initial_elements_list_c");
+    TRACE("array_initial_elements_list_c(generate_array.cc)");
     for(int i = 0; i < symbol->n; i++) {
         if(typeid(*(symbol->elements[i])) == typeid(array_initial_elements_c)){
             symbol->elements[i]->accept(*this);
@@ -438,7 +439,7 @@ void *generate_array_c::visit(array_initial_elements_list_c *symbol) {
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 void *generate_array_c::visit(array_initial_elements_c *symbol) {
-  TRACE("array_initial_elements_c");
+  TRACE("array_initial_elements_c(generate_array.cc)");
   int temp_count = 0;
   IValue iv;
   temp_count = std::stoi((char*)symbol->integer->accept(*this));
@@ -640,7 +641,7 @@ void *generate_array_c::visit(direct_variable_c *symbol) {TRACE("direct_variable
 /*************************************/
 /*  subscripted_variable '[' subscript_list ']' */
 void *generate_array_c::visit(array_variable_c *symbol) {
-  TRACE("array_variable_c");
+  TRACE("array_variable_c(generate_array.cc)");
   symbol->subscripted_variable->accept(*this);
   symbol->subscript_list->accept(*this);
   return NULL;
@@ -648,7 +649,7 @@ void *generate_array_c::visit(array_variable_c *symbol) {
 
 
 /* subscript_list ',' subscript */
-void *generate_array_c::visit(subscript_list_c *symbol) {TRACE("subscript_list_c"); return NULL; }
+void *generate_array_c::visit(subscript_list_c *symbol) {TRACE("subscript_list_c(generate_array.cc)"); return NULL; }
 
 /*  record_variable '.' field_selector */
 void *generate_array_c::visit(structured_variable_c *symbol) {

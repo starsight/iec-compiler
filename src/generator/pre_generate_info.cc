@@ -62,8 +62,23 @@ int pre_generate_pou_info_c::find_var_return_num(std::string var_name)
 		count ++;
 	}
 	count = 0;
+	std::cout << "struct_var_collector.size: " << struct_var_collector.size() << std::endl;
 	for(auto elem : struct_var_collector){
 		std::vector<std::string> str = utility_token_get_c::split(elem.struct_name, " ");
+		std::cout << "struct_name: " << elem.struct_name << std::endl;
+		std::cout << "var_name: " << var_name << std::endl;
+		if (str[1] == var_name){
+			return count;
+		}
+		count ++;
+	}
+	//wenjie
+	count=0;
+	std::cout << "array_var_collector.size: " << array_var_collector.size() << std::endl;
+	for(auto elem : array_var_collector){
+		std::vector<std::string> str = utility_token_get_c::split(elem.array_name, " ");
+		std::cout << "array_name1: " << elem.array_name << std::endl;
+		std::cout << "var_name1: " << var_name << std::endl;
 		if (str[1] == var_name){
 			return count;
 		}

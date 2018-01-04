@@ -160,7 +160,7 @@ public:
 
   void *visit(initialized_structure_c *symbol);
 
-
+  void *visit(array_spec_init_c *symbol);//wenjie
 
 
   /*********************/
@@ -230,6 +230,8 @@ public:
   void *visit(var1_init_decl_c *symbol) ;
 
   void *visit(var1_list_c *symbol) ;
+
+  void *visit(array_var_init_decl_c *symbol);//wenjie
 
   void *visit(structured_var_init_decl_c *symbol);
   /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */

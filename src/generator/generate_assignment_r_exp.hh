@@ -20,9 +20,11 @@
 class generate_assign_r_exp_c : public null_visitor_c {
 private:
     pre_generate_pou_info_c *pou_info;
+    bool innerflag;
+    std::string innerString;
 
 public:
-	generate_assign_r_exp_c(pre_generate_pou_info_c* pou_info_param) {
+	generate_assign_r_exp_c(pre_generate_pou_info_c* pou_info_param):innerflag(false) {
 		this->pou_info = pou_info_param;
 	}
 	~generate_assign_r_exp_c(void) {} ;

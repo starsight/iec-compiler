@@ -70,6 +70,14 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 	}
 	temp_obj_task.user_pou_list.push_back(temp_user_pou);
 
+	// insert refval
+	for(auto collector: pou_iterator-> struct_var_collector){
+		temp_obj_task.refval_list.push_back(collector.elements);
+		int ix = collector.struct_name.find(" ");
+		temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
+	}
+
+
 	auto end_index = temp_obj_task.code_list.end();
 	unsigned int inst_code_count = temp_obj_task.code_list.size();
 	temp_obj_task.code_list.insert(end_index, pou_iterator->inst_code.begin(), pou_iterator->inst_code.end());
@@ -363,7 +371,7 @@ void code_linker_c::link_code(void) {
 								input_code.push_back(temp_code);
 								break;
 							case 'L':
-								temp_code += std::to_string(index) + std::string(" ") + str.substr(3) + std::string(" ") + std::to_string(32);
+								temp_code += std::to_string(index) + std::string(" ") + str.substr(3) + std::string(" ") + std::to_string(64);
 								input_code.push_back(temp_code);
 								break;
 						}
@@ -477,7 +485,7 @@ void code_linker_c::link_code(void) {
 								output_code.push_back(temp_code);
 								break;
 							case 'L':
-								temp_code += std::to_string(index) + std::string(" ") + str.substr(3) + std::string(" ") + std::to_string(32);
+								temp_code += std::to_string(index) + std::string(" ") + str.substr(3) + std::string(" ") + std::to_string(64);
 								output_code.push_back(temp_code);
 								break;
 						}
@@ -568,6 +576,7 @@ void code_linker_c::link_code(void) {
 			temp_obj_task.task_des.stack_count = temp_obj_task.user_pou_list.size() + 2; // 调用栈的个数为POU个数加2，富余2个；
 			temp_obj_task.task_des.const_count = temp_obj_task.const_list.size();
 			temp_obj_task.task_des.global_count = temp_obj_task.global_list.size();
+			temp_obj_task.task_des.refval_count = temp_obj_task.refval_list.size();
 			temp_obj_task.task_des.retain_count = temp_obj_task.retain_list.size();
 			temp_obj_task.task_des.inst_count = temp_obj_task.code_list.size();
 
@@ -594,6 +603,9 @@ void code_linker_c::link_code(void) {
 
 					code_slice[0] = "jmp";
 					*code_beg = code_slice[0] + std::string(" ") + code_slice[1] + std::string(" ") + code_slice[2];
+				}
+				if((*code_beg).find("mov") == 0 || (*code_beg).find("lnot") == 0 || (*code_beg).find("not") == 0){
+					*code_beg += " 0";
 				}
 				code_beg ++;
 			}

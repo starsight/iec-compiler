@@ -34,7 +34,11 @@ PROGRAM MAIN
 
 (*    RET := SFUN_IO_UPDATE(0); *)
 
+ 	RET := SFUN_SERVO_INPUT_UPDATE(0);
+
 	RET := SFUN_INTERP_UPDATE(0);
+
+	RET := SFUN_SERVO_OUTPUT_UPDATE(0);
 
 (*    RET := SFUN_IO_UPDATE(1); *)
 
@@ -53,7 +57,7 @@ PROGRAM MAIN2
 	IF IN > 1 THEN
 		OUT := USERA(IN);
 	ELSE
-       OUT := USERA(IN); 
+       OUT := USERA(IN);
 		OUT := OUT + 3 + 4;
 	END_IF;
 

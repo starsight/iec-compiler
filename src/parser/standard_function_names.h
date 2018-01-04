@@ -8,7 +8,13 @@
 
 
 static const char *standard_function_names[] = {
-"SFUN_INTERP_UPDATE",//add by yaoshun for interp update
+"SFUN_RCMODE_READ", //add by yaoshun for interp update
+"SFUN_RCPLC_SERVOFLAG_SET",
+"SFUN_SERVO_POWERON",
+"SFUN_SERVO_POWEROFF",
+"SFUN_INTERP_UPDATE",
+"SFUN_SERVO_INPUT_UPDATE",
+"SFUN_SERVO_OUTPUT_UPDATE",
 "REAL_TO_SINT",
 "REAL_TO_LINT",
 "REAL_TO_DINT",

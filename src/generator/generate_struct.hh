@@ -15,17 +15,21 @@
 #include "pre_generate_info.hh"
 #include "../absyntax/visitor.hh"
 #include "utility_token_get.hh"
+#include "../absyntax_utils/absyntax_utils.hh"
 
 class generate_struct_c : public null_visitor_c{
 private:
     struct_type_c *struct_type;
+    std::vector<struct_type_c> structCollector;
 
     std::string var_value;
     std::string var_type;
+    std::string innerName;
 
 public:
-    generate_struct_c(struct_type_c *struct_type_param){
+    generate_struct_c(struct_type_c *struct_type_param, std::vector<struct_type_c>& collector){
         this->struct_type = struct_type_param;
+        structCollector = collector;
     }
     ~generate_struct_c() {};
 
@@ -270,6 +274,9 @@ private:
     /* integer '(' [array_initial_element] ')' */
     /* array_initial_element may be NULL ! */
     void *visit(array_initial_elements_c *symbol) ;
+
+
+    void trans_struct(IValue& iv, std::string& var_type, std::string& var_value);
 
     /*  structure_type_name ':' structure_specification */
     void *visit(structure_type_declaration_c *symbol) ;

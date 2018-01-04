@@ -661,10 +661,14 @@ void *visit(enumerated_value_c *symbol) {
 
 /*  identifier ':' array_spec_init */
 void *visit(array_type_declaration_c *symbol) {
-  TRACE("array_type_declaration_c");
+  TRACE("array_type_declaration_c_2(generate_iec.cc)");
  #ifdef _CODE_GENERATOR
   array_type_c temp_array_type;     // 定义数组类型变量描述结构体
   generate_array_c temp_array_c(&temp_array_type);
+
+  //std::cout << "identifier" << " : " << (char*)symbol->identifier->accept(*this) << std::endl;
+  //std::cout << "array_spec_init "<< " : " << (char*)symbol->array_spec_init->accept(*this) << std::endl;
+
   temp_array_type.array_name = (char*)symbol->identifier->accept(temp_array_c);
   s4o.print(" : ");
   symbol->array_spec_init->accept(temp_array_c);
@@ -692,7 +696,7 @@ void *visit(array_type_declaration_c *symbol) {
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 void *visit(array_spec_init_c *symbol) {
-  TRACE("array_spec_init_c");
+  TRACE("array_spec_init_c(generate_iec.cc)");
   symbol->array_specification->accept(*this);
   if (symbol->array_initialization != NULL) {
     s4o.print(" := ");
@@ -703,7 +707,7 @@ void *visit(array_spec_init_c *symbol) {
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *visit(array_specification_c *symbol) {
-  TRACE("array_specification_c");
+  TRACE("array_specification_c(generate_iec.cc)");
   s4o.print("ARRAY [");
   symbol->array_subrange_list->accept(*this);
   s4o.print("] OF ");
@@ -713,16 +717,16 @@ void *visit(array_specification_c *symbol) {
 
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
-void *visit(array_subrange_list_c *symbol) { TRACE("array_subrange_list_c");  print_list(symbol, "", ", "); return NULL;}
+void *visit(array_subrange_list_c *symbol) { TRACE("array_subrange_list_c(generate_iec.cc)");  print_list(symbol, "", ", "); return NULL;}
 
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
-void *visit(array_initial_elements_list_c *symbol) { TRACE("array_initial_elements_list_c"); print_list(symbol, "[", ", ", "]"); return NULL;}
+void *visit(array_initial_elements_list_c *symbol) { TRACE("array_initial_elements_list_c(generate_iec.cc)"); print_list(symbol, "[", ", ", "]"); return NULL;}
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 void *visit(array_initial_elements_c *symbol) {
-  TRACE("array_initial_elements_c");
+  TRACE("array_initial_elements_c(generate_iec.cc)");
   symbol->integer->accept(*this);
   s4o.print("(");
   if (symbol->array_initial_element != NULL)
@@ -733,15 +737,16 @@ void *visit(array_initial_elements_c *symbol) {
 
 /*  structure_type_name ':' structure_specification */
 void *visit(structure_type_declaration_c *symbol) {
-  TRACE("structure_type_declaration_c");
+  TRACE("structure_type_declaration_c_2(generate_iec_c.cc)");
 #ifdef _CODE_GENERATOR
   struct_type_c temp_struct_type;
-  generate_struct_c temp_struct_c(&temp_struct_type);
+  generate_struct_c temp_struct_c(&temp_struct_type,pre_code_info->struct_type_collector);
   temp_struct_type.struct_name = (char*)symbol->structure_type_name->accept(temp_struct_c);
   s4o.print(" : ");
   symbol->structure_specification->accept(temp_struct_c);
-  // temp_struct_type.print();
+  temp_struct_type.print();
   pre_code_info->struct_type_collector.push_back(temp_struct_type);
+  std::cout << "struct size_2(generate_iec.cc) = " << pre_code_info->struct_type_collector.size() << std::endl; 
 #else
     symbol->structure_type_name->accept(*this);
     s4o.print(" : ");
@@ -767,6 +772,7 @@ void *visit(initialized_structure_c *symbol) {
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *visit(structure_element_declaration_list_c *symbol) {
   TRACE("structure_element_declaration_list_c");
+  std::cout << "I am in iec routine " << std::endl;
   s4o.print("STRUCT\n");
   s4o.indent_right();
   print_list(symbol, s4o.indent_spaces, ";\n" + s4o.indent_spaces, ";\n" + s4o.indent_spaces);
@@ -996,7 +1002,7 @@ void *visit(falling_edge_option_c *symbol) {
  */
 std::vector<std::string> var_name_set;
 void *visit(var1_init_decl_c *symbol) {
-  TRACE("var1_init_decl_c");
+  TRACE("var1_init_decl_c(generate_iec.cc)");
 #ifdef _CODE_GENERATOR
   symbol->var1_list->accept(*this);
   s4o.print(" : ");
@@ -1023,6 +1029,7 @@ void *visit(var1_init_decl_c *symbol) {
        iv.v.value_d = std::stod(var_value);
     }
     else {
+      std::cout << "var_type(init generic_iec.cc) = " << std::endl;
       iv.v.value_s.str = strdup(var_value.c_str());
       iv.v.value_s.length = strlen(var_value.c_str());
     }
@@ -1093,7 +1100,7 @@ void *visit(extensible_input_parameter_c *symbol) {
 
 /* var1_list ':' array_spec_init */
 void *visit(array_var_init_decl_c *symbol) {
-  TRACE("array_var_init_decl_c");
+  TRACE("array_var_init_decl_c(generate_iec.cc)");
   symbol->var1_list->accept(*this);
   s4o.print(" : ");
   symbol->array_spec_init->accept(*this);
@@ -1103,7 +1110,7 @@ void *visit(array_var_init_decl_c *symbol) {
 
 /*  var1_list ':' initialized_structure */
 void *visit(structured_var_init_decl_c *symbol) {
-  TRACE("structured_var_init_decl_c");
+  TRACE("structured_var_init_decl_c(generate_iec.cc)");
   symbol->var1_list->accept(*this);
   s4o.print(" : ");
   symbol->initialized_structure->accept(*this);
@@ -1643,8 +1650,9 @@ void *visit(program_declaration_c *symbol) {
 
   s4o.print("\n");
   symbol->function_block_body->accept(*this);
+
   s4o.indent_left();
-  s4o.print("END_PROGRAM\n\n\n");
+  s4o.print("END_PROGRAM(generate_iec.cc)\n\n\n");
 
   pou_info->inst_code.push_back("halt 0 0 0");
 
@@ -2451,21 +2459,33 @@ void *visit(statement_list_c *symbol) {
 /* B 3.2.1 Assignment Statements */
 /*********************************/
 void *visit( assignment_statement_c *symbol) {
-  TRACE("assignment_statement_c");
+  TRACE("assignment_statement_c(generate_iec.cc)");
 #ifdef _CODE_GENERATOR
   generate_assign_r_exp_c temp_r_exp(pou_info);
   generate_assign_l_exp_c temp_l_exp(pou_info);
 
-  std::string temp_code = "mov ";
-
-  temp_code += (char*)symbol->l_exp->accept(temp_l_exp) + std::string(" ");
+  // Modified by YCHJ
+  // std::string temp_code = "mov ";
+  std::string temp_code;
+  std::string leftreg;
+  std::string rightreg;
+  leftreg = (char*)symbol->l_exp->accept(temp_l_exp);
 
   s4o.print(" := ");
 
   if(typeid(*symbol->r_exp) == typeid(function_invocation_c)) {
-    temp_code += (char*)symbol->r_exp->accept(*this);
+    rightreg = (char*)symbol->r_exp->accept(*this);
   } else {
-    temp_code += (char*)symbol->r_exp->accept(temp_r_exp);
+    rightreg = (char*)symbol->r_exp->accept(temp_r_exp);
+  }
+
+  int ix = 0;
+  if((ix = leftreg.find('\\')) != std::string::npos){
+    std::string regB = leftreg.substr(0,ix);
+    std::string regC = leftreg.substr(ix+1);
+    temp_code = std::string("setfield ") + rightreg + std::string(" ") + regB + std::string(" ") + regC;
+  }else{
+    temp_code = std::string("mov ") + leftreg + std::string(" ") + rightreg;
   }
 //  pou_info->dec_pou_reg_num();
   pou_info->inst_code.push_back(temp_code);

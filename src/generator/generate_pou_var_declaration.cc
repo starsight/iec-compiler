@@ -65,7 +65,10 @@ void *generate_pou_var_declaration_c::visit(                 identifier_c *symbo
     return strdup(symbol->value);
 }
 void *generate_pou_var_declaration_c::visit(derived_datatype_identifier_c *symbol) {
-    TRACE("derived_datatype_identifier_c");
+    TRACE("derived_datatype_identifier_c(generate_pou_var_declaration.cc)");
+    
+    std::cout << "symbol->value = " << symbol->value << std::endl;
+
     return strdup(symbol->value);
 }
 
@@ -214,11 +217,11 @@ void *generate_pou_var_declaration_c::visit(simple_type_declaration_c *symbol) {
 
 /* simple_specification ASSIGN constant */
 void *generate_pou_var_declaration_c::visit(simple_spec_init_c *symbol) {
-  TRACE("simple_spec_init_c");
+  TRACE("simple_spec_init_c(generate_pou_var_declaration.cc)");
   var_type = (char*)symbol->simple_specification->accept(*this);
 
   if (symbol->constant != NULL) {
-
+    std::cout<<"var_value(generate_pou_var_declaration.cc) = "<<var_value<<std::endl;
     var_value = (char*)symbol->constant->accept(*this);
   } else {
     var_value = "0";
@@ -230,14 +233,29 @@ void *generate_pou_var_declaration_c::visit(simple_spec_init_c *symbol) {
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 void *generate_pou_var_declaration_c::visit(initialized_structure_c *symbol) {
-  TRACE("initialized_structure_c");
+  TRACE("initialized_structure_c(generate_pou_var_declaration.cc)");
   var_type = (char*)symbol->structure_type_name->accept(*this);
+  std::cout<<"var_type(initialized_structure_c): "<<var_type<<std::endl;
   if (symbol->structure_initialization != NULL) {
-    symbol->structure_initialization->accept(*this);
+    std::string str = (char *)symbol->structure_initialization->accept(*this);
+    std::cout<<"NOT NULL: "<<str<<std::endl;
   }
   return NULL;
 }
 
+/* array_specification [ASSIGN array_initialization] */
+/* array_initialization may be NULL ! */
+void *generate_pou_var_declaration_c::visit(array_spec_init_c *symbol) {// added by wenjie
+  TRACE("array_spec_init_c(generate_pou_var_declaration.cc)");
+  std::string strTemp = (char*)symbol->array_specification->accept(*this);
+  var_type = strTemp;
+  std::cout << "strTemp = " << strTemp << std::endl;
+  if (symbol->array_initialization != NULL) {
+    std::string str = (char *)symbol->array_initialization->accept(*this);
+    std::cout<<"NOT NULL: "<<str<<std::endl;
+  }
+  return NULL;
+}
 
 
 /*********************/
@@ -364,7 +382,7 @@ void *generate_pou_var_declaration_c::visit(falling_edge_option_c *symbol) {
  *    enumerated_spec_init_c *
  */
 void *generate_pou_var_declaration_c::visit(var1_init_decl_c *symbol) {
-  TRACE("var1_init_decl_c");
+  TRACE("var1_init_decl_c(generate_pou_var_declaration.cc)");
   symbol->var1_list->accept(*this);
 
   symbol->spec_init->accept(*this);
@@ -377,21 +395,29 @@ void *generate_pou_var_declaration_c::visit(var1_init_decl_c *symbol) {
     iv.type = ivt;
     iv.name = elem;
     if(ivt == TINT) {
-      if (!var_value.empty())
+      if (!var_value.empty()){
+        std::cout << "var_type(TINT) = " << var_type << " name = " << elem << std::endl;
         iv.v.value_i = std::stoi(var_value);
+      }
     }
     else if(ivt == TUINT) {
-      if (!var_value.empty())
+      if (!var_value.empty()){
+        std::cout << "var_type(TUINT) = " << var_type << " name = " << elem << std::endl;
         iv.v.value_u = std::stoi(var_value);
+      }
     }
     else if(ivt == TDOUBLE) {
-      if (!var_value.empty())
-       iv.v.value_d = std::stod(var_value);
+      if (!var_value.empty()){
+        std::cout << "var_type(DOUBLE) = " << var_type << " name = " << elem << std::endl;
+        iv.v.value_d = std::stod(var_value);
+      }
     }
     else {
+      std::cout << "var_type = " << var_type << " name = " << elem << std::endl;
       iv.v.value_s.str = strdup(var_value.c_str());
       iv.v.value_s.length = strlen(var_value.c_str());
     }
+    std::cout<<"get_pou_status= "<<pou_info->get_pou_status()<<std::endl;
     if(POU_STA_VAR_IN_DEC == pou_info->get_pou_status())
       pou_info->input_variable.push_back(iv);
     else if(POU_STA_VAR_OUT_DEC == pou_info->get_pou_status())
@@ -404,6 +430,8 @@ void *generate_pou_var_declaration_c::visit(var1_init_decl_c *symbol) {
       ERROR_MSG("wrong pou status !");
 
   }
+  
+  std::cout<<"clear"<<std::endl;
   var_name_set.clear();
 
   return NULL;
@@ -413,8 +441,12 @@ void *generate_pou_var_declaration_c::visit(var1_init_decl_c *symbol) {
 void *generate_pou_var_declaration_c::visit(var1_list_c *symbol) {
   TRACE("var1_list_c");
 
+  std::cout << "symbol->n = " << symbol->n << std::endl;
+
   for(int i = 0; i < symbol->n; i++) {
     std::string str = (char*)symbol->elements[i]->accept(*this);
+
+    std::cout << "str = " << str << std::endl;
 
     var_name_set.push_back(str);
   }
@@ -422,9 +454,42 @@ void *generate_pou_var_declaration_c::visit(var1_list_c *symbol) {
   return NULL;
 }
 
+/* var1_list ':' array_spec_init */ //wenjie
+void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
+  TRACE("array_var_init_decl_c(generate_pou_var_declaration.cc)");
+  symbol->var1_list->accept(*this);
+  symbol->array_spec_init->accept(*this);
+
+  pre_generate_info_c *code_info = pre_generate_info_c::getInstance();
+  array_type_c temp_array_var;
+
+  std::cout << "array_type_collector-size:  "<<code_info->array_type_collector.size()<< std::endl;
+
+  for(auto elem : code_info->array_type_collector){    // 查找shuzu对应类型
+  std::cout << "elem:  "<<elem.array_name<< std::endl;
+  std::cout << "var_type:  "<<var_type<< std::endl;
+
+      if(elem.array_name == var_type){
+          temp_array_var = elem;
+          elem.print();
+          break;
+      }
+  }
+  
+  for(auto elem : var_name_set){            // 将结构体变量加入结构体变量集中
+      std::cout << "array_name:  "<<var_type + " " + elem<< std::endl;
+      temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
+      pou_info->array_var_collector.push_back(temp_array_var);
+  
+  }
+  std::cout << "END array_var_init_decl_c END "<< std::endl;
+  var_name_set.clear();//added by wenjie
+  return NULL;
+}
+
 /*  var1_list ':' initialized_structure */
 void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol) {
-  TRACE("structured_var_init_decl_c");
+  TRACE("structured_var_init_decl_c(generate_pou_var_declaration.cc)");
   symbol->var1_list->accept(*this);
 
   symbol->initialized_structure->accept(*this);
@@ -434,10 +499,12 @@ void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol) 
   for(auto elem : code_info->struct_type_collector){    // 查找结构变量对应类型
       if(elem.struct_name == var_type){
           temp_struct_var = elem;
+          elem.print();
           break;
       }
   }
   for(auto elem : var_name_set){            // 将结构体变量加入结构体变量集中
+      std::cout << "var_name_set:  "<<elem<< std::endl;
       temp_struct_var.struct_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
       pou_info->struct_var_collector.push_back(temp_struct_var);
 
@@ -458,7 +525,8 @@ void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol) 
     //   else
     //     ERROR_MSG("wrong pou status !");
   }
-
+  std::cout << "END structured_var_init_decl_c END "<< std::endl;
+  var_name_set.clear();//added by wenjie
   return NULL;
 }
 
@@ -679,7 +747,8 @@ void *generate_pou_var_declaration_c::visit(incompl_location_c *symbol) {
  */
 /* | var_init_decl_list var_init_decl ';' */
 void *generate_pou_var_declaration_c::visit(var_init_decl_list_c *symbol) {
-  TRACE("var_init_decl_list_c");
+  TRACE("var_init_decl_list_c(generate_pou_var_declaration.cc)");
+  std::cout<<"var_init_decl_list_c list-length: "<<symbol->n<<std::endl;
   return print_list(symbol,std::string(""), ";\n" + std::string(""), ";\n");
 }
 

@@ -1,0 +1,61 @@
+
+TYPE TUM:
+  STRUCT
+    A : INT := 1;
+    B : INT ;
+  END_STRUCT;
+END_TYPE
+
+TYPE TU:
+  STRUCT
+    CU: BOOL;
+    R:  BOOL;
+    PV: INT:=3;
+    Q:  BOOL;
+    CV: INT;
+    AB: TUM;
+  END_STRUCT;
+END_TYPE
+
+TYPE AI:
+  ARRAY[0..9] OF INT := [4(1024), 5(-1024)];
+END_TYPE
+
+TYPE AI2:
+  ARRAY[0..2,0..2] OF INT := [4(1024), 2(-1024)];
+END_TYPE
+
+PROGRAM MAIN 
+  VAR
+    RETS   : INT;
+    INPUT : TU ;
+    ARR:AI;
+    ARR2:AI2;
+  END_VAR
+
+  RETS := INPUT.AB.A;
+  RETS := ARR2[0,2];
+  ARR2[4] :=12;
+
+ 
+END_PROGRAM
+
+
+CONFIGURATION MAIN_CONFIG
+
+  RESOURCE RES1 ON CPU1
+  (*
+    VAR_GLOBAL
+      W AT %IB0: BYTE := 0;
+    END_VAR
+*)
+    TASK fast(INTERVAL := T#8ms, PRIORITY := 90);
+
+    PROGRAM P1 WITH fast: MAIN;
+(*
+    (IN := W);
+*)
+
+  END_RESOURCE
+
+END_CONFIGURATION

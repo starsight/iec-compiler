@@ -1,0 +1,141 @@
+# OBJ Header
+header_magic   MAGIC
+header_type    SYS_TYPE_32
+header_order   BYTE_ORDER_LIT
+header_version 1
+header_machine MACH_CORTEX_A8
+
+# OBJ I/O Configuration Segment
+iocs_update_interval 8000000
+iocs_ldi_count 3
+iocs_ldo_count 3
+iocs_lai_count 3
+iocs_lao_count 3
+iocs_rdi_count 0
+iocs_rdo_count 0
+iocs_rai_count 0
+iocs_rao_count 0
+
+# OBJ Servo Configuration Segment
+scs_axis_count 1
+scs_update_interval 8000000
+
+acs_name     axis1
+acs_id       1
+acs_type     AXIS_TYPE_FINITE
+acs_combined AXIS_INDEPENDENT
+acs_opmode   OPMODE_POS
+acs_min_pos  0.0
+acs_max_pos  180.0
+acs_max_vel  100.0
+acs_max_acc  20.0
+acs_max_dec  20.0
+acs_max_jerk 10.0
+
+
+# OBJ PLC Task List Segment
+plc_task_count 1
+plc_global_count 0
+plc_timer_count 0
+
+
+
+# OBJ PLC Task Description Segment
+tds_name           P1
+tds_priority       90
+tds_type           TASK_TYPE_INTERVAL
+tds_signal         0
+tds_interval       8000000
+tds_sp_size        256
+tds_cs_size        3
+tds_pou_count      1
+tds_const_count    2
+tds_global_count   4
+tds_refval_count   0
+tds_inst_count     60
+
+# OBJ POU Description Segment
+pds_name           MAIN
+pds_type           POU_TYPE_PROG
+pds_instance       0
+pds_input_count    1
+pds_inout_count    0
+pds_output_count   2
+pds_local_count    29
+pds_entry          0
+
+# OBJ PLC Task Constant Segment
+K TUINT 0
+K TUINT 1
+
+# OBJ PLC Task Global Variables Segment
+G TINT 0
+G TINT 0
+G TINT 0
+G TINT 0
+
+# OBJ PLC Task Reference Variables Segment
+
+# OBJ PLC Task Code Segment
+I gload 0 0
+I gload 1 1
+I gload 2 2
+I gload 3 3
+I ldload 0 0 8
+I kload 4 0
+I mov 5 4 0
+I scall 5 SFUN_SERVO_INPUT_UPDATE
+I mov 3 5 0
+I kload 6 0
+I mov 7 6 0
+I scall 7 SFUN_RCMODE_READ
+I mov 3 7 0
+I kload 11 1
+I eq 10 0 11
+I kload 13 1
+I eq 12 3 13
+I lor 9 10 12
+I lnot 8 9 0
+I condj 8 6
+I kload 14 0
+I mov 15 14 0
+I scall 15 SFUN_SERVO_POWERON
+I mov 3 15 0
+I jmp 9 
+I kload 16 0
+I mov 17 16 0
+I scall 17 SFUN_SERVO_POWEROFF
+I mov 3 17 0
+I kload 18 0
+I mov 19 18 0
+I scall 19 SFUN_RCPLC_SERVOFLAG_SET
+I mov 3 19 0
+I kload 22 1
+I eq 21 3 22
+I lnot 20 21 0
+I condj 20 19
+I kload 23 1
+I mov 24 23 0
+I scall 24 SFUN_RCPLC_SERVOFLAG_SET
+I mov 3 24 0
+I kload 27 1
+I eq 26 3 27
+I lnot 25 26 0
+I condj 25 10
+I kload 28 0
+I mov 29 28 0
+I scall 29 SFUN_INTERP_UPDATE
+I mov 3 29 0
+I kload 30 0
+I mov 31 30 0
+I scall 31 SFUN_SERVO_OUTPUT_UPDATE
+I mov 3 31 0
+I jmp 1 
+I jmp 1 
+I gstore 0 0
+I gstore 1 1
+I gstore 2 2
+I gstore 3 3
+I halt 0 0 0
+
+EOF

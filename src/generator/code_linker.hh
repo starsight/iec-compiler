@@ -84,8 +84,8 @@ public:
 		out << "# OBJ POU Description Segment" << std::endl;
 		out << "pds_name           " << user_pou_name << std::endl;
 
-		out << "pds_type:          " << ((pds_type == 1) ? "POU_TYPE_FUN" : (pds_type == 2 ? "POU_TYPE_FB" : (pds_type == 3 ? "POU_TYPE_PROG" : "POU_TYPE_UNDEF"))) << std::endl;
-		out << "pds_instance:      " << pds_instance << std::endl;
+		out << "pds_type           " << ((pds_type == 1) ? "POU_TYPE_FUN" : (pds_type == 2 ? "POU_TYPE_FB" : (pds_type == 3 ? "POU_TYPE_PROG" : "POU_TYPE_UNDEF"))) << std::endl;
+		out << "pds_instance       " << pds_instance << std::endl;
 
 		out << "pds_input_count    " << input_count << std::endl;
 		out << "pds_inout_count    " << inout_count << std::endl;
@@ -167,8 +167,9 @@ public:
 	std::vector<IValue> const_list;
 	std::vector<IValue> global_list;
 	std::vector<IValue> retain_list;
-	std::vector<IValue> refval_list;
-
+	// std::vector<IValue> refval_list;
+	std::vector<std::vector<IValue>> refval_list;
+	std::vector<std::string> reftp_list;
 	std::list<std::string> code_list;
 
 
@@ -215,6 +216,22 @@ public:
 		out << std::endl;
 
 		out << "# OBJ PLC Task Reference Variables Segment" << std::endl;
+		for(size_t i = 0; i != refval_list.size(); ++i){
+			out << reftp_list[i];
+			for(auto elem:refval_list[i]){
+				out << std::string(" ") << (elem.type == TINT ? "TINT":((elem.type == TUINT) ? "TUINT" : "TDOUBLE"));
+				if(elem.type == TINT)
+					out << std::string(" ") << elem.v.value_i;
+				else if(elem.type == TUINT)
+					out << std::string(" ") << elem.v.value_u ;
+				else if(elem.type == TDOUBLE)
+					out << std::string(" ") << elem.v.value_d;
+				else
+					out << std::string(" ") << elem.v.value_s.str;
+			}
+			out << std::endl;
+		}
+		
 		out << std::endl;
 
 		/*std::cout << "# OBJ PLC Task Retain Variables Segment" << std::endl;
