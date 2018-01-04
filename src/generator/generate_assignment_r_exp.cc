@@ -351,11 +351,14 @@ void *generate_assign_r_exp_c::visit(array_variable_c *symbol) {
   TRACE("array_variable_c");
  	std::string subscript = (char *)symbol->subscripted_variable->accept(*this);
 	std::cout << "subscripted_variable = " << subscript << std::endl;
-  
+	int collector_index = std::stoi(subscript);
+	
+	array_index = collector_index;
+
 	int *subscript_list = (int *)symbol->subscript_list->accept(*this);
 	std::cout << "subscript_list = " << subscript_list << std::endl;
 
-	int collector_index = std::stoi(subscript);
+	
     //int array_index = std::stoi(subscript_list);
 	int array_index = *subscript_list;
 	std::string temp_code = std::string("kload ") ;
@@ -407,17 +410,12 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
   	std::cout<<"n = "<<symbol->n<<std::endl;
 	//多维数组每一维长度必须相同　wenjie
 	int index=0;
-
-	/*pre_generate_info_c &pre_code_info = *(pre_generate_info_c::getInstance());
-	for(auto elem : pre_code_info.array_type_collector){
-		if(elem.array_name == ){
-				
-		}
-	}*/
+	int row_count=0;
 
   	for(int i = 0; i < symbol->n; i++) {//todo
     if(symbol->elements[i]!=NULL){
-      std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+	  std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+	  row_count = pou_info->array_var_collector[array_index].each_row_count[i];
 	  index += std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i])));
       //return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
     }
