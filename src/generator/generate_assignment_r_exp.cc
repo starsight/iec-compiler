@@ -412,16 +412,49 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
 	int index=0;
 	int row_count=0;
 
-  	for(int i = 0; i < symbol->n; i++) {//todo
-    if(symbol->elements[i]!=NULL){
-	  std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
-	  row_count = pou_info->array_var_collector[array_index].each_row_count[i];
-	  index += std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i])));
-      //return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
-    }
-  	}
+	index =cal_array_offset(each_row_count,symbol);
+  	/*for(int i = 0; i < symbol->n; i++) {//todo
+    	if(symbol->elements[i]!=NULL){
+	  	//std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+	  	//row_count = pou_info->array_var_collector[array_index].each_row_count[i];
+	  
+      	//return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
+    	}
+  	}*/
 	void *p = &index;
   	return p; 
+}
+int generate_assign_r_exp_c::cal_array_offset_helper(symbol_c *elements){
+	return std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)elements)));
+}
+int generate_assign_r_exp_c::cal_array_offset_multi_helper(vector<int> each_row_count,int from){
+	int multi =1;
+	int i=from;
+	for(;i<each_row_count.size();i++){
+		multi=multi*each_row_count[i];
+	}
+	std::cout<<"multi = "<<multi<<endl;
+	return (from==each_row_count.size())?0:multi;
+}
+
+int generate_assign_r_exp_c::cal_array_offset(vector<int> each_row_count,subscript_list_c *symbol){
+	symbol_c **elements = symbol->elements;
+	if(each_row_count.size()!=symbol->n)
+		return -1;
+
+	int index=0;
+
+	for(int i=0;i<symbol_c->n;i++){
+		int ele_res = cal_array_offset_helper(symbol->elements[i]);
+		if(i==(symbol_c->n-1)){//最后一个元素
+			index += ele_res;//0..ele_res-1 共有ele_res个元素
+			break;
+		}
+		for(int j=0;j<ele_res;j++){
+			index +=cal_array_offset_multi_helper(each_row_count,i+1);
+		}
+	}
+	return index;
 }
 
 /*  record_variable '.' field_selector */

@@ -31,7 +31,10 @@ public:
 	~generate_assign_r_exp_c(void) {} ;
 
 private:
-
+	int cal_array_offset_helper(symbol_c *elements);
+	int cal_array_offset_multi_helper(vector<int> each_row_count,int from);
+	int cal_array_offset(vector<int> each_row_count,subscript_list_c *symbol);
+	
 	/*******************************************/
 	/* B 1.1 - Letters, digits and identifiers */
 	/*******************************************/
