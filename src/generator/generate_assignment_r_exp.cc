@@ -352,12 +352,12 @@ void *generate_assign_r_exp_c::visit(array_variable_c *symbol) {
  	std::string subscript = (char *)symbol->subscripted_variable->accept(*this);
 	std::cout << "subscripted_variable = " << subscript << std::endl;
   
-	std::string subscript_list = (char *)symbol->subscript_list->accept(*this);
+	int *subscript_list = (int *)symbol->subscript_list->accept(*this);
 	std::cout << "subscript_list = " << subscript_list << std::endl;
 
 	int collector_index = std::stoi(subscript);
-    int array_index = std::stoi(subscript_list);
-
+    //int array_index = std::stoi(subscript_list);
+	int array_index = *subscript_list;
 	std::string temp_code = std::string("kload ") ;
 	std::string temp_reg_numB = pou_info->get_pou_reg_num();
 	pou_info->inc_pou_reg_num();
@@ -405,14 +405,25 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
 	TRACE("subscript_list_c(generate_assignment_r_exp.cc)"); 
 
   	std::cout<<"n = "<<symbol->n<<std::endl;
+	//多维数组每一维长度必须相同　wenjie
+	int index=0;
+
+	/*pre_generate_info_c &pre_code_info = *(pre_generate_info_c::getInstance());
+	for(auto elem : pre_code_info.array_type_collector){
+		if(elem.array_name == ){
+				
+		}
+	}*/
 
   	for(int i = 0; i < symbol->n; i++) {//todo
-    //if(symbol->elements[i]!=NULL){
-      //std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
-      return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
-    //}
+    if(symbol->elements[i]!=NULL){
+      std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+	  index += std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i])));
+      //return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
+    }
   	}
-  	return NULL; 
+	void *p = &index;
+  	return p; 
 }
 
 /*  record_variable '.' field_selector */

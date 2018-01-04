@@ -1,5 +1,8 @@
 #include "generate_array.hh"
 
+/*
+数组需要以０为起始下标，否则size会出现错误导致一系列问题 多维数组每一维长度必须相同　wenjie 18-01-04
+*/
 
 
 
@@ -326,7 +329,12 @@ void *generate_array_c::visit(subrange_c *symbol) {
   TRACE("subrange_c(generate_array.cc)");
   symbol->lower_limit->accept(*this);
 
-  array_type->size = std::stoi((char*)symbol->upper_limit->accept(*this)); //得到数组大小
+  int upper_limit = std::stoi((char*)symbol->upper_limit->accept(*this)); //得到数组大小
+  int lower_limit = std::stoi((char*)symbol->lower_limit->accept(*this)); 
+
+  array_type->each_row_count.push_back(upper_limit-lower_limit+1);
+  array_type->size += upper_limit-lower_limit+1;//changed by wenjie
+
   return NULL;
 }
 

@@ -136,12 +136,14 @@ public:
 };
 
 /* 用于记录数组数据类型 */
+//数组需要以０为起始下标，否则size会出现错误导致一系列问题　多维数组每一维长度必须相同　wenjie 18-01-04
 class array_type_c{
 public:
     std::string array_name;
     internal_value_t type;
-    unsigned int size;
+    unsigned int size =0;
     std::vector<IValue> init_value;
+	std::vector<int> each_row_count;//记录每一行的个数，多维数组计算偏移　wenjie
     void print(){
         std::cout << "array name: " << array_name << ", type: " << type << ", size: " << size << std::endl;
         for(int i = 0; i < init_value.size(); i ++){

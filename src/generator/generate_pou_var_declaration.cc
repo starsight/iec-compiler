@@ -465,7 +465,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
 
   std::cout << "array_type_collector-size:  "<<code_info->array_type_collector.size()<< std::endl;
 
-  for(auto elem : code_info->array_type_collector){    // 查找shuzu对应类型
+  for(auto elem : code_info->array_type_collector){    // 查找數組对应类型
   std::cout << "elem:  "<<elem.array_name<< std::endl;
   std::cout << "var_type:  "<<var_type<< std::endl;
 
