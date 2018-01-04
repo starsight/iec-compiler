@@ -38,6 +38,6 @@ build
 *.dump
 
 #vs code
-.vscode
+#.vscode
 
 iec_compiler
