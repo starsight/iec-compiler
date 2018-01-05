@@ -410,7 +410,7 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
 	TRACE("subscript_list_c(generate_assignment_r_exp.cc)"); 
 
   	std::cout<<"n = "<<symbol->n<<std::endl;
-	//多维数组每一维长度必须相同　wenjie
+	//多维数组每一维长度最好相同　wenjie
 	int index=0;
 	int row_count=0;
 
@@ -426,6 +426,16 @@ void *generate_assign_r_exp_c::visit(subscript_list_c *symbol) {
 	void *p = &index;
   	return p; 
 }
+/**
+ * cal_array_offset 系列函数  by wenjie 18-01-05
+ * 计算多维数组中，当前值在整个数组中的偏移位置（从0开始）
+ * 举例：[3][4][2]维度 计算[1][2][1]偏移
+ * 除去最后一位，每一维累积偏移为：之后维度的大小的积*（次数）。
+ * 如第一位为1，则 偏移=（4*2）*1
+ * 第二位为2，则 偏移=（2）*2
+ * 最后一位直接是下标值 = 1
+ * 累积偏移为8+4+1=13=index
+*/
 int generate_assign_r_exp_c::cal_array_offset_helper(symbol_c *elements){
 	return std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)elements)));
 }

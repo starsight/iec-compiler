@@ -53,12 +53,14 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
 
   std::string subscript = (char *)symbol->subscripted_variable->accept(*this);
   std::cout << "subscripted_variable = " << subscript << std::endl;
-  
-  std::string subscript_list = (char *)symbol->subscript_list->accept(*this);//跳转visit(subscript_list_c *symbol)
-  std::cout << "subscript_list = " << subscript_list << std::endl;
-
   int collector_index = std::stoi(subscript);
-  int array_index = std::stoi(subscript_list);
+
+  array_type_index = collector_index;
+
+  int * subscript_list = (int *)symbol->subscript_list->accept(*this);//跳转visit(subscript_list_c *symbol)
+  //std::cout << "subscript_list = " << subscript_list << std::endl;
+
+  int array_index = *subscript_list;
 
   //pou_info->array_var_collector[collector_index]
 
@@ -101,14 +103,63 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
 void *generate_assign_l_exp_c::visit(subscript_list_c *symbol) {
   TRACE("subscript_list_c"); 
 
+  // std::cout<<"n = "<<symbol->n<<std::endl;
+
+  // for(int i = 0; i < symbol->n; i++) {//todo
+  //     return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
+  // }
   std::cout<<"n = "<<symbol->n<<std::endl;
+	//多维数组每一维长度最好相同　wenjie
+	int index=0;
+	int row_count=0;
 
-  for(int i = 0; i < symbol->n; i++) {//todo
-      return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
-  }
-
-  return NULL; 
+	index =cal_array_offset(pou_info->array_var_collector[array_type_index].each_row_count,symbol);
+  	/*for(int i = 0; i < symbol->n; i++) {//todo
+    	if(symbol->elements[i]!=NULL){
+	  	//std::cout<<"NoT ERROR "<< (char *)(utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]))<<std::endl;
+	  	//row_count = pou_info->array_var_collector[array_index].each_row_count[i];
+	  
+      	//return utility_token_get_c::return_striped_token((integer_c *)symbol->elements[i]);
+    	}
+  	}*/
+	void *p = &index;
+  return p; 
+  //return NULL; 
 }
+
+int generate_assign_l_exp_c::cal_array_offset_helper(symbol_c *elements){
+	return std::stoi((char *)(utility_token_get_c::return_striped_token((integer_c *)elements)));
+}
+int generate_assign_l_exp_c::cal_array_offset_multi_helper(std::vector<int> each_row_count,int from){
+	int multi =1;
+	int i=from;
+	for(;i<each_row_count.size();i++){
+		multi=multi*each_row_count[i];
+	}
+	std::cout<<"multi = "<<multi<<std::endl;
+	return (from==each_row_count.size())?0:multi;
+}
+
+int generate_assign_l_exp_c::cal_array_offset(std::vector<int> each_row_count,subscript_list_c *symbol){
+	symbol_c **elements = symbol->elements;
+	if(each_row_count.size()!=symbol->n)
+		return -1;
+
+	int index=0;
+
+	for(int i=0;i<symbol->n;i++){
+		int ele_res = cal_array_offset_helper(symbol->elements[i]);
+		if(i==(symbol->n-1)){//最后一个元素
+			index += ele_res;//0..ele_res-1 共有ele_res个元素
+			break;
+		}
+		for(int j=0;j<ele_res;j++){
+			index +=cal_array_offset_multi_helper(each_row_count,i+1);
+		}
+	}
+	return index;
+}
+
 
 /*  record_variable '.' field_selector */
 void *generate_assign_l_exp_c::visit(structured_variable_c *symbol) {

@@ -15,7 +15,7 @@ tds_interval       8000000
 tds_sp_size        256
 tds_cs_size        3
 tds_pou_count      1
-tds_const_count    5
+tds_const_count    6
 tds_global_count   1
 tds_refval_count   1
 tds_inst_count     15
@@ -34,7 +34,8 @@ pds_entry          0
 K TUINT 0
 K TUINT 5
 K TUINT 1
-K TUINT 4
+K TUINT 14
+K TUINT 13
 K TUINT 12
 
 # OBJ PLC Task Global Variables Segment
@@ -50,12 +51,12 @@ I kload 2 1
 I getfield 3 1 2
 I mov 0 3 0
 I kload 4 2
-I kload 5 2
+I kload 5 3
 I getfield 6 4 5
 I mov 0 6 0
 I kload 7 2
-I kload 8 3
-I kload 9 4
+I kload 8 4
+I kload 9 5
 I setfield 9 7 8
 I gstore 0 0
 I halt 0 0 0

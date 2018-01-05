@@ -35,7 +35,7 @@ PROGRAM MAIN
 
   RETS := INPUT.AB.A;
   RETS := ARR2[1,2,2];
-  ARR2[4] :=12;
+  ARR2[1,2,1] :=12;
 
  
 END_PROGRAM
