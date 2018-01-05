@@ -39,5 +39,6 @@ build
 
 #vs code
 .vscode/*.json
+.vscode/*.bat
 
 iec_compiler
