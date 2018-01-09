@@ -356,7 +356,7 @@ void *generate_assign_r_exp_c::visit(array_variable_c *symbol) {
 	array_type_index = collector_index;
 
 	int *subscript_list = (int *)symbol->subscript_list->accept(*this);
-	//std::cout << "subscript_list = " << *subscript_list << std::endl;
+	//std::cout << "subscript_list = " << *subscript_list << std::endl;//必须要注释掉这句话，不然*subscript_list的值会莫名其妙改变……
 
 	
 	int array_index = *subscript_list;
