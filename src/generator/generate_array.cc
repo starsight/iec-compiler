@@ -333,7 +333,9 @@ void *generate_array_c::visit(subrange_c *symbol) {
   int lower_limit = std::stoi((char*)symbol->lower_limit->accept(*this)); 
 
   array_type->each_row_count.push_back(upper_limit-lower_limit+1);
-  array_type->size += upper_limit-lower_limit+1;//changed by wenjie
+  if(array_type->size==0)
+    array_type->size =1;
+  array_type->size *= upper_limit-lower_limit+1;//changed by wenjie
 
   return NULL;
 }

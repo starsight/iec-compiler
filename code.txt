@@ -17,7 +17,7 @@ tds_cs_size        3
 tds_pou_count      1
 tds_const_count    6
 tds_global_count   1
-tds_refval_count   1
+tds_refval_count   3
 tds_inst_count     15
 
 # OBJ POU Description Segment
@@ -43,6 +43,8 @@ G TINT 0
 
 # OBJ PLC Task Reference Variables Segment
 S TU TUINT 0 TUINT 0 TINT 3 TUINT 0 TINT 0 TINT 1 TINT 0
+S AI TINT 1024 TINT 1024 TINT 1024 TINT 1024 TINT -1024 TINT -1024 TINT -1024 TINT -1024 TINT -1024 TINT 0
+S AI2 TINT 1024 TINT 1024 TINT 1024 TINT 1024 TINT -1024 TINT -1024 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0 TINT 0
 
 # OBJ PLC Task Code Segment
 I gload 0 0

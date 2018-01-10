@@ -77,6 +77,12 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 		temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
 	}
 
+	for(auto collector: pou_iterator-> array_var_collector){//wenjie
+		temp_obj_task.refval_list.push_back(collector.init_value);
+		int ix = collector.array_name.find(" ");
+		temp_obj_task.reftp_list.push_back(std::string("S ") + collector.array_name.substr(0,ix));
+	}
+
 
 	auto end_index = temp_obj_task.code_list.end();
 	unsigned int inst_code_count = temp_obj_task.code_list.size();
