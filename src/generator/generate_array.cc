@@ -416,7 +416,7 @@ void *generate_array_c::visit(array_subrange_list_c *symbol) {
 
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
-void *generate_array_c::visit(array_initial_elements_list_c *symbol) {
+void *generate_array_c::visit(array_initial_elements_list_c *symbol) {//array 初始化
     TRACE("array_initial_elements_list_c(generate_array.cc)");
     for(int i = 0; i < symbol->n; i++) {
         if(typeid(*(symbol->elements[i])) == typeid(array_initial_elements_c)){

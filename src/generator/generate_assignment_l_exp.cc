@@ -148,7 +148,7 @@ int generate_assign_l_exp_c::cal_array_offset(std::vector<int> each_row_count,su
 	int index=0;
 
 	for(int i=0;i<symbol->n;i++){
-		int ele_res = cal_array_offset_helper(symbol->elements[i]);
+		int ele_res = cal_array_offset_helper(symbol->elements[i]);//essential error-1.
 		if(i==(symbol->n-1)){//最后一个元素
 			index += ele_res;//0..ele_res-1 共有ele_res个元素
 			break;
