@@ -403,7 +403,8 @@ void *generate_array_c::visit(array_specification_c *symbol) {
   symbol->array_subrange_list->accept(*this);
   std::cout << "########################" << std::endl;
   std::string str_type = (char*)symbol->non_generic_type_name->accept(*this);
-  array_type->type = pre_generate_pou_info_c::variable_type_check(str_type);
+  std::cout << "str_type: "<< str_type << std::endl;  
+  array_type->type = pre_generate_pou_info_c::variable_type_check(str_type);//声明 type  pre_generate_info.c
   std::cout << "########################" << std::endl;
   return NULL;
 }

@@ -465,7 +465,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
 
   std::cout << "array_type_collector-size:  "<<code_info->array_type_collector.size()<< std::endl;
 
-  for(auto elem : code_info->array_type_collector){    // 查找數組对应类型
+  for(auto elem : code_info->array_type_collector){    // 查找数组对应类型
   std::cout << "elem:  "<<elem.array_name<< std::endl;
   std::cout << "var_type:  "<<var_type<< std::endl;
 
@@ -476,7 +476,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
       }
   }
   
-  for(auto elem : var_name_set){            // 将结构体变量加入结构体变量集中
+  for(auto elem : var_name_set){            // 将数组变量加入结构体变量集中
       std::cout << "array_name:  "<<var_type + " " + elem<< std::endl;
       temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
       pou_info->array_var_collector.push_back(temp_array_var);
