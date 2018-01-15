@@ -402,9 +402,26 @@ void *generate_array_c::visit(array_specification_c *symbol) {
 
   symbol->array_subrange_list->accept(*this);
   std::cout << "########################" << std::endl;
-  std::string str_type = (char*)symbol->non_generic_type_name->accept(*this);
+  char *str_type  = (char*)symbol->non_generic_type_name->accept(*this);
   std::cout << "str_type: "<< str_type << std::endl;  
   array_type->type = pre_generate_pou_info_c::variable_type_check(str_type);//声明 type  pre_generate_info.c
+
+  if(array_type->type==TREF){//结构体数组初始化每个IREF
+    for(int i=0;i<array_type->size;i++){
+      IValue iv;
+      iv.v.value_p.ref_type =str_type;
+      /*pre_generate_info_c *code_info = pre_generate_info_c::getInstance();//涉及pou初始化部分，不应写在这里
+      for(auto elem : code_info->struct_type_collector){ 
+        if(elem.struct_name==str_type){
+
+        }
+      }
+      iv.value_p.value_index =;*/
+      array_type->init_value.push_back(iv);
+    }
+
+  }
+
   std::cout << "########################" << std::endl;
   return NULL;
 }

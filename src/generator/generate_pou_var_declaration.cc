@@ -466,18 +466,48 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
   std::cout << "array_type_collector-size:  "<<code_info->array_type_collector.size()<< std::endl;
 
   for(auto elem : code_info->array_type_collector){    // 查找数组对应类型
-  std::cout << "elem:  "<<elem.array_name<< std::endl;
-  std::cout << "var_type:  "<<var_type<< std::endl;
+    std::cout << "elem:  "<<elem.array_name<< std::endl;
+    std::cout << "var_type:  "<<var_type<< std::endl;
 
-      if(elem.array_name == var_type){
-          temp_array_var = elem;
-          elem.print();
-          break;
-      }
+    if(elem.array_name == var_type){
+        temp_array_var = elem;
+
+        if(elem.type==TREF){//结构体数组初始化每个IREF  index赋值  wenjie 18-01-15
+          struct_type_c temp_struct_var;
+          std::string str = temp_array_var.init_value[0].v.value_p.ref_type;
+          for(auto s_elem : code_info->struct_type_collector){    // 查找结构变量对应类型
+              if(s_elem.struct_name == str ){
+                  temp_struct_var = s_elem;
+                  //elem.print();
+                  break;
+              }
+          }
+          /*for(int i=0;i<temp_array_var.init_value.size();i++){
+            int num =pou_info->struct_var_collector.size();
+            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组变量名+index的形式
+            pou_info->struct_var_collector.push_back(temp_struct_var);
+            temp_array_var.init_value[i].v.value_p.value_index =num;
+            
+            std::cout<<temp_struct_var.struct_name<<"-"<<num<<std::endl;
+          }*/
+          for(IValue &ivalue:temp_array_var.init_value){  //&ivalue
+            int num =pou_info->struct_var_collector.size();
+            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组变量名+index的形式
+            pou_info->struct_var_collector.push_back(temp_struct_var);
+            ivalue.v.value_p.value_index =num;
+            
+            std::cout<<temp_struct_var.struct_name<<"-"<<num<<std::endl;
+            //std::cout<< ivalue.v.value_p.value_index<<std::endl;
+          }
+        }
+
+        temp_array_var.print();
+        break;
+    }
   }
   
   for(auto elem : var_name_set){            // 将数组变量加入结构体变量集中
-      std::cout << "array_name:  "<<var_type + " " + elem<< std::endl;
+      std::cout << "array_name=  "<<var_type + " elem =" + elem<< std::endl;
       temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
       pou_info->array_var_collector.push_back(temp_array_var);
   
