@@ -40,7 +40,7 @@ A compiler for IEC61131-3 language
 ## Update Log
 
 ---
-[update.log](update-log.md)
+[update-log](update-log.md)
 
 ## Thanks
 
