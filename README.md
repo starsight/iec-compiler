@@ -28,16 +28,19 @@ A compiler for IEC61131-3 language
 5. `$ ../iec_compiler.exe < ../test/test4lexer`
 
 ## Release Notes
+
 ---
 
 ## Essential Errors
+
+---
 1. 数组赋值时的边界检查 cal_array_offset_multi_helper
 2. 
----
 
 ## Update Log
-1. [update.log](update-log.md)
+
 ---
+[update.log](update-log.md)
 
 ## Thanks
 
