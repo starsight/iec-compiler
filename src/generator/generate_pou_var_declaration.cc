@@ -484,7 +484,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
           }
           /*for(int i=0;i<temp_array_var.init_value.size();i++){
             int num =pou_info->struct_var_collector.size();
-            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组变量名+index的形式
+            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组类型名+index的形式
             pou_info->struct_var_collector.push_back(temp_struct_var);
             temp_array_var.init_value[i].v.value_p.value_index =num;
             
@@ -492,7 +492,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
           }*/
           for(IValue &ivalue:temp_array_var.init_value){  //&ivalue
             int num =pou_info->struct_var_collector.size();
-            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组变量名+index的形式
+            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组类型名+index的形式
             pou_info->struct_var_collector.push_back(temp_struct_var);
             ivalue.v.value_p.value_index =num;
             

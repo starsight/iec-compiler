@@ -362,6 +362,18 @@ void *generate_assign_r_exp_c::visit(array_variable_c *symbol) {
 	int array_index = *subscript_list;
 	std::cout << "array_index = " << array_index << std::endl;
 
+	if(pou_info->array_var_collector[collector_index].type==TREF){//结构体类型数组 构造成AI_4 数组类型名_struct_var_collector的index
+		std::vector<std::string> struct_array_type_var_name = utility_token_get_c::split(pou_info->array_var_collector[collector_index].array_name, " ");
+		std::string  struct_array_type_name = struct_array_type_var_name[0];
+		int struct_var_collector_index = pou_info->array_var_collector[collector_index].init_value[array_index].v.value_p.value_index;
+		std::string IREF_str =struct_array_type_name+"_"+utility_token_get_c::numeric_to_string(struct_var_collector_index);
+		std::cout<<IREF_str<<std::endl;
+		int record_num;
+		if((record_num = pou_info->find_var_return_num(IREF_str)) == -1)
+			ERROR_MSG("cannot find the specific variable !");
+		return strdup(utility_token_get_c::numeric_to_string(record_num).c_str());
+	}
+
 
 	std::string temp_code = std::string("kload ") ;
 	std::string temp_reg_numB = pou_info->get_pou_reg_num();

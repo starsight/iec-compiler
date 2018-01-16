@@ -78,9 +78,12 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 	}
 
 	for(auto collector: pou_iterator-> array_var_collector){//wenjie
+		if(collector.type==TREF){
+			continue;
+		}
 		temp_obj_task.refval_list.push_back(collector.init_value);
 		int ix = collector.array_name.find(" ");
-		temp_obj_task.reftp_list.push_back(std::string("S ") + collector.array_name.substr(0,ix));
+		temp_obj_task.reftp_list.push_back(std::string("A ") + collector.array_name.substr(0,ix));
 	}
 
 

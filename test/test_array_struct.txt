@@ -13,9 +13,11 @@ END_TYPE
 PROGRAM MAIN 
   VAR
     CC : AI ;
+    DD : INT;
   END_VAR
 
-  CC[0].A:=2;
+  CC[4].B:=2;
+  DD :=CC[8].B;
 
 END_PROGRAM
 
