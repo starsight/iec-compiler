@@ -218,8 +218,13 @@ public:
 		out << "# OBJ PLC Task Reference Variables Segment" << std::endl;
 		for(size_t i = 0; i != refval_list.size(); ++i){
 			out << reftp_list[i];
+			bool first_time=true;
 			for(auto elem:refval_list[i]){
-				out << std::string(" ") << (elem.type == TINT ? "TINT":((elem.type == TUINT) ? "TUINT" : "TDOUBLE"));
+				
+				if(reftp_list[i][0]=='S'||first_time){
+					out << std::string(" ") << (elem.type == TINT ? "TINT":((elem.type == TUINT) ? "TUINT" : "TDOUBLE"));					
+					first_time =false;
+				}
 				if(elem.type == TINT)
 					out << std::string(" ") << elem.v.value_i;
 				else if(elem.type == TUINT)

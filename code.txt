@@ -17,7 +17,7 @@ tds_cs_size        3
 tds_pou_count      1
 tds_const_count    4
 tds_global_count   1
-tds_refval_count   11
+tds_refval_count   12
 tds_inst_count     11
 
 # OBJ POU Description Segment
@@ -51,6 +51,7 @@ S TUM TINT 1 TINT 0
 S TUM TINT 1 TINT 0
 S TUM TINT 1 TINT 0
 S TUM TINT 1 TINT 0
+A AI2 TINT 0 0 0 0
 
 # OBJ PLC Task Code Segment
 I gload 0 0

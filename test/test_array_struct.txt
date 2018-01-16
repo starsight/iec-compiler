@@ -9,11 +9,15 @@ TYPE AI:
   ARRAY[0..10] OF TUM ;
 END_TYPE
 
+TYPE AI2:
+  ARRAY[0..3] OF INT ;
+END_TYPE
 
 PROGRAM MAIN 
   VAR
     CC : AI ;
     DD : INT;
+    EE :AI2;
   END_VAR
 
   CC[4].B:=2;
