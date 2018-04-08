@@ -669,8 +669,11 @@ void *visit(array_type_declaration_c *symbol) {
   //std::cout << "identifier" << " : " << (char*)symbol->identifier->accept(*this) << std::endl;
   //std::cout << "array_spec_init "<< " : " << (char*)symbol->array_spec_init->accept(*this) << std::endl;
 
+  //数组类型名 如AI，AI2
   temp_array_type.array_name = (char*)symbol->identifier->accept(temp_array_c);
   s4o.print(" : ");
+  //转入 generate_array.cc void *generate_array_c::visit(array_spec_init_c *symbol)
+  //获取到size type信息 及完成部分元素的初始化
   symbol->array_spec_init->accept(temp_array_c);
 
   int actual_size = temp_array_type.init_value.size();  // 数组中已显式初始化元素个数

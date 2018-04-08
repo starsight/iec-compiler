@@ -335,7 +335,7 @@ void *generate_array_c::visit(subrange_c *symbol) {
   array_type->each_row_count.push_back(upper_limit-lower_limit+1);
   if(array_type->size==0)
     array_type->size =1;
-  array_type->size *= upper_limit-lower_limit+1;//changed by wenjie
+  array_type->size *= upper_limit-lower_limit+1;//changed by wenjie 不记录每一维度的起始index，所以必须以0作为index起始
 
   return NULL;
 }
@@ -386,8 +386,11 @@ void *generate_array_c::visit(array_type_declaration_c *symbol) {
 
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
+// 入口
+// example -> ARRAY[0..9] OF INT := [4(1024), 5(-1024)];
 void *generate_array_c::visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c(generate_array.cc)");
+  // 跳转 void *generate_array_c::visit(array_specification_c *symbol)
   symbol->array_specification->accept(*this);
   if (symbol->array_initialization != NULL) {
 
@@ -396,6 +399,7 @@ void *generate_array_c::visit(array_spec_init_c *symbol) {
   return NULL;
 }
 
+// example -> ARRAY[0..9] OF INT
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *generate_array_c::visit(array_specification_c *symbol) {
   TRACE("array_specification_c(generate_array.cc)");
@@ -406,6 +410,8 @@ void *generate_array_c::visit(array_specification_c *symbol) {
   std::cout << "str_type: "<< str_type << std::endl;  
   array_type->type = pre_generate_pou_info_c::variable_type_check(str_type);//声明 type  pre_generate_info.c
 
+  // 因为结构体数组不会有具体的初始化，所以这边全部添加默认的IValue，只是设置了type
+  // 当新建一个结构体变量时，…… towrite
   if(array_type->type==TREF){//结构体数组初始化每个IREF
     for(int i=0;i<array_type->size;i++){
       IValue iv;
@@ -430,18 +436,23 @@ void *generate_array_c::visit(array_specification_c *symbol) {
 /* array_subrange_list ',' subrange */
 void *generate_array_c::visit(array_subrange_list_c *symbol) {
     TRACE("array_subrange_list_c(generate_array.cc)");
+    // print_list 跳转到 void *generate_array_c::visit(subrange_c *symbol) 获得数组上下限
     print_list(symbol, "", ", ");
     return NULL;
 }
 
+// array类型声明 初始化,包括初始化指定的默认值 example -> [4(1024), 5(-1024)]  结构体数组认为不会有默认值
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
-void *generate_array_c::visit(array_initial_elements_list_c *symbol) {//array 初始化
+void *generate_array_c::visit(array_initial_elements_list_c *symbol) {
     TRACE("array_initial_elements_list_c(generate_array.cc)");
     for(int i = 0; i < symbol->n; i++) {
+        // 对于example -> symbol->n =2;
         if(typeid(*(symbol->elements[i])) == typeid(array_initial_elements_c)){
+          //跳转至void *generate_array_c::visit(array_initial_elements_c *symbol)
             symbol->elements[i]->accept(*this);
         } else {
+            // 不太清楚何时会进入此
             IValue iv;
             if(array_type->type == TINT){
                 iv.type = TINT;
@@ -464,6 +475,7 @@ void *generate_array_c::visit(array_initial_elements_list_c *symbol) {//array �
     return NULL;
 }
 
+// example ->  5(-1024)
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 void *generate_array_c::visit(array_initial_elements_c *symbol) {
@@ -471,7 +483,7 @@ void *generate_array_c::visit(array_initial_elements_c *symbol) {
   int temp_count = 0;
   IValue iv;
   temp_count = std::stoi((char*)symbol->integer->accept(*this));
-
+  //对于example -> temp_count = 5;
   if (symbol->array_initial_element != NULL){   // 取得数组初始值
       if(array_type->type == TINT){
           iv.type = TINT;
@@ -487,6 +499,8 @@ void *generate_array_c::visit(array_initial_elements_c *symbol) {
           // 待完成
       } else {
           // 待完成
+          // 认为结构体数组不会在声明的时候初始化，所以此部分工作不需要做，
+          // 在定义结构体数组变量时转而去使用结构体的初始化，然后存放在结构体变量数组中          
       }
   }
   for(int i = 0; i < temp_count; i ++){
