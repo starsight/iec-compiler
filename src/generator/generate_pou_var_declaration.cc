@@ -468,7 +468,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
   for(auto elem : code_info->array_type_collector){    // 查找数组对应类型
     std::cout << "elem:  "<<elem.array_name<< std::endl;
     std::cout << "var_type:  "<<var_type<< std::endl;
-
+    // elem 就是声明数组时保存在array_type_collector中的模板
     if(elem.array_name == var_type){
         temp_array_var = elem;
 
@@ -493,6 +493,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
           for(IValue &ivalue:temp_array_var.init_value){  //&ivalue
             int num =pou_info->struct_var_collector.size();
             temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组类型名+index的形式
+            
             pou_info->struct_var_collector.push_back(temp_struct_var);
             ivalue.v.value_p.value_index =num;
             
@@ -506,13 +507,16 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
     }
   }
   
-  for(auto elem : var_name_set){            // 将数组变量加入结构体变量集中
+  // 不管是不是结构体数组，只要是数组都要添加到array_var_collector中，结构体数组额外再添加到struct_var_collector中（如上）
+  for(auto elem : var_name_set){            // 将数组变量加入结构体变量集(应该写错了，是array_var_collector，数组变量集)中
       std::cout << "array_name=  "<<var_type + " elem =" + elem<< std::endl;
-      temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
+      temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集(应该写错了，是array_var_collector，数组变量集)中的变量名设为类型名+变量名的形式
       pou_info->array_var_collector.push_back(temp_array_var);
   
   }
   std::cout << "END array_var_init_decl_c END "<< std::endl;
+  
+  //正确 18-4-9 复核
   var_name_set.clear();//added by wenjie
   return NULL;
 }

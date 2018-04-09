@@ -411,7 +411,9 @@ void *generate_array_c::visit(array_specification_c *symbol) {
   array_type->type = pre_generate_pou_info_c::variable_type_check(str_type);//声明 type  pre_generate_info.c
 
   // 因为结构体数组不会有具体的初始化，所以这边全部添加默认的IValue，只是设置了type
-  // 当新建一个结构体变量时，…… towrite
+  // 当新建一个结构体变量时，直接在下面完成类型声明，加入到array_type_collector，这样就完成了声明部分
+  // 对于结构体变量，在generate_pou_var_declaration.cc 
+  //                     - void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol)完成变量初始化
   if(array_type->type==TREF){//结构体数组初始化每个IREF
     for(int i=0;i<array_type->size;i++){
       IValue iv;
