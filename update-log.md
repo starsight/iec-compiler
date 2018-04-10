@@ -14,4 +14,4 @@
 
 **修改文件说明**
 - 1.`generate_array.cc` void *generate_array_c::visit(array_specification_c *symbol)初始化结构体数组中的每一个`IValue`的`ref_type`，即ARRAY的类型，这里是结构体名。这边只是添加到`array_var_collector`中（这边应该是笔误，应该是`array_type_collector`），只是类型声明的初始化，之后声明实际变量时，根据这个模板，再修改`index`，放入`struct_var_collector`中，就是真正的变量,同时为了赋值取值时方便，会在`array_var_collector`同时也保留一份变量的信息，但里面不是实际的结构体数组变量（参考`generate_pou_var_declaration.cc`-`void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol)`,`generate_assign_r_exp`-`void *generate_assign_r_exp_c::visit(array_variable_c *symbol)`等）。
-- 2.`generate_pou_var_declaration.cc`void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) 设置`value_index`，放入`struct_var_collector`（相当于在struct_var_collector中连续存储数组长度个struct类型的变量）。以后根据`ref_type`和`value_index`确定哪个struct位置。每个struct_name为类型+空格+数组类型名+“_”+index（如TUM AI_2）。
+- 2.`generate_pou_var_declaration.cc`void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) 设置`value_index`，放入`struct_var_collector`（相当于在struct_var_collector中连续存储数组长度个struct类型的变量）。以后根据`ref_type`和`value_index`确定哪个struct位置。每个struct_name为类型+空格+数组类型名+“_”+value_index（如TUM AI_2）。
