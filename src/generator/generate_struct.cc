@@ -490,9 +490,11 @@ void *generate_struct_c::visit(structure_element_declaration_c *symbol) {
   IValue iv; // 临时储存结构体成员
   iv.name = innerName + (char*)symbol->structure_element_name->accept(*this);
 
+  //-> void *generate_struct_c::visit(simple_spec_init_c *symbol) 
   symbol->spec_init->accept(*this);
 
   // std::cout << "****** teststr = " << teststr << std::endl;
+  // 结构体中某一个变量的类型 值
   std::cout << var_type << " " << var_value << std::endl;
 
     if((iv.type = pre_generate_pou_info_c::variable_type_check(var_type)) == TUNDEF){

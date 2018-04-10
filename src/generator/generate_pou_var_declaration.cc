@@ -496,7 +496,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
             
             pou_info->struct_var_collector.push_back(temp_struct_var);
             ivalue.v.value_p.value_index =num;
-            
+            ivalue.name = elem.array_name+"_"+std::to_string(num);//突然发现可以直接把信息存到name里，为了程序稳定没有使用这种，但肯定是可以的
             std::cout<<temp_struct_var.struct_name<<"-"<<num<<std::endl;
             //std::cout<< ivalue.v.value_p.value_index<<std::endl;
           }

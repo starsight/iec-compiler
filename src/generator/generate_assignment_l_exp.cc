@@ -68,9 +68,12 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
     int struct_var_collector_index = pou_info->array_var_collector[collector_index].init_value[array_index].v.value_p.value_index;
     std::string IREF_str =struct_array_type_name+"_"+utility_token_get_c::numeric_to_string(struct_var_collector_index);
     std::cout<<IREF_str<<std::endl;
+    //直接把信息存到name里，为了程序稳定没有使用这种，但肯定是可以的
+    std::cout<<pou_info->array_var_collector[collector_index].init_value[array_index].name<<std::endl;
     int record_num;
 	  if((record_num = pou_info->find_var_return_num(IREF_str)) == -1)
 	    ERROR_MSG("cannot find the specific variable !");
+    //返回这个结构体数组元素在struct_var_collector的位置到void *generate_assign_l_exp_c::visit(structured_variable_c *symbol)中
     return strdup(utility_token_get_c::numeric_to_string(record_num).c_str());
   }
   //pou_info->array_var_collector[collector_index]
