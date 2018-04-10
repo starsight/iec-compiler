@@ -488,6 +488,7 @@ void generate_struct_c::trans_struct(IValue& iv, std::string& var_type, std::str
 void *generate_struct_c::visit(structure_element_declaration_c *symbol) {
   TRACE("structure_element_declaration_c(generate_struct.cc)");
   IValue iv; // 临时储存结构体成员
+  //对于结构体嵌套的处理，与赋值阶段的innerString相对应 
   iv.name = innerName + (char*)symbol->structure_element_name->accept(*this);
 
   //-> void *generate_struct_c::visit(simple_spec_init_c *symbol) 
