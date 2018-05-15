@@ -1,13 +1,13 @@
 ### 18-05-16
 **修改说明**
-`code link`过程的修改
+- 1.`code link`过程的修改
 
 **修改文件说明**
 - 1.根据`translator.cc`发现`code_linker.cc`中对引用类型变量的编译生成描述形式的错误。原来为`S TUM TINT 1 TINT 2`形式，改为`S 2 TINT 1 TINT 2`，即第二个参数为这个复杂数据结构中的元素个数，而不是类型名。
 ---
 ### 18-05-15
 **修改说明**
-增加生成translator.exe的Makefile的gdb调试参数
+- 1.增加生成translator.exe的Makefile的gdb调试参数
 
 **修改文件说明**
 - 1.`../src/objgen/Makefile`增加`-g`参数
