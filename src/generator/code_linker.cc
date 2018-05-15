@@ -73,8 +73,11 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 	// insert refval
 	for(auto collector: pou_iterator-> struct_var_collector){
 		temp_obj_task.refval_list.push_back(collector.elements);
-		int ix = collector.struct_name.find(" ");
-		temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
+		//int ix = collector.struct_name.find(" ");
+		//temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
+		// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
+		int cnt = collector.elements.size();
+		temp_obj_task.reftp_list.push_back(std::string("S ") + std::to_string(cnt));
 	}
 
 	for(auto collector: pou_iterator-> array_var_collector){//wenjie
@@ -82,8 +85,11 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 			continue;
 		}
 		temp_obj_task.refval_list.push_back(collector.init_value);
-		int ix = collector.array_name.find(" ");
-		temp_obj_task.reftp_list.push_back(std::string("A ") + collector.array_name.substr(0,ix));
+		//int ix = collector.array_name.find(" ");
+		//temp_obj_task.reftp_list.push_back(std::string("A ") + collector.array_name.substr(0,ix));
+		// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
+		int cnt = collector.init_value.size();
+		temp_obj_task.reftp_list.push_back(std::string("A ") + std::to_string(cnt));
 	}
 
 

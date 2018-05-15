@@ -1,7 +1,8 @@
 TYPE TUM:
   STRUCT
     A : INT := 1;
-    B : INT ;
+    B : INT := 2;
+    C : REAL;
   END_STRUCT;
 END_TYPE
 
@@ -10,17 +11,17 @@ TYPE AI:
 END_TYPE
 
 TYPE AI2:
-  ARRAY[0..3] OF INT ;
+  ARRAY[0..3] OF INT :=[1,2,3,4];
 END_TYPE
 
 PROGRAM MAIN 
   VAR
     CC : AI ;
     DD : INT;
-    EE :AI2;
+    EE : AI2;
   END_VAR
 
-  CC[4].B:=2;
+  CC[4].C:=2.2;
   DD :=CC[8].B;
 
 END_PROGRAM
