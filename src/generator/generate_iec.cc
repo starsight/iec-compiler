@@ -1502,7 +1502,7 @@ void *visit(function_declaration_c *symbol) {
 
   s4o.print(s4o.indent_spaces + "END_FUNCTION\n\n\n");
 
-  // pou_info->print_detail_info();
+   pou_info->print_detail_info();
   pou_info->set_pou_status(POU_STA_INIT);
 
   pre_code_info->insert(*pou_info);
@@ -1583,7 +1583,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "END_FUNCTION_BLOCK\n\n\n");
 
-  // pou_info->print_detail_info();
+   pou_info->print_detail_info();
   pou_info->set_pou_status(POU_STA_INIT);
 
   pre_code_info->insert(*pou_info);
@@ -2523,10 +2523,13 @@ void *visit(fb_invocation_c *symbol) {
     * following two symbols will be NULL, while the other is != NULL.
     * The two may be NULL simultaneously!
     */
+    // formal形式的参数传入 如(INPU1:=98, INPU2:=99) 先不考虑此种情况 18-5-15 TODO
+    // generate_pou_invocation.cc void *generate_pou_invocation_c::visit(input_variable_param_assignment_c *symbol)
     if (symbol->   formal_param_list != NULL) {
       std::cout << "formal param list" << std::endl;
       symbol->   formal_param_list->accept(temp_pou_invocation);
     }
+    // informal形式的参数传入 如(98,99)
     if (symbol->nonformal_param_list != NULL) {
       std::cout << "nonformal param list" << std::endl;
       symbol->nonformal_param_list->accept(temp_pou_invocation);

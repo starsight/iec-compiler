@@ -454,6 +454,39 @@ void *generate_pou_var_declaration_c::visit(var1_list_c *symbol) {
   return NULL;
 }
 
+/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
+  TRACE("fb_name_decl_c(generate_pou_var_declaration.cc)");
+  /* Please read the comments inside the var1_init_decl_c
+   * visitor, as they apply here too.
+   */
+
+  /* Start off by setting the current_var_type_symbol and
+   * current_var_init_symbol private variables...
+   */
+  //update_type_init(symbol->fb_spec_init);
+
+  /* now to produce the c equivalent... */
+  //symbol->fb_name_list->accept(*this);
+
+  /* Values no longer in scope, and therefore no longer used.
+   * Make an effort to keep them set to NULL when not in use
+   * in order to catch bugs as soon as possible...
+   */
+  //void_type_init();
+
+  return NULL;
+}
+
+/* fb_name_list ',' fb_name */
+void *generate_pou_var_declaration_c::visit(fb_name_list_c *symbol) {
+  TRACE("fb_name_list_c");
+  //declare_variables(symbol, true);
+  return NULL;
+}
+
+// 数组变量的初始化
 /* var1_list ':' array_spec_init */ //wenjie
 void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
   TRACE("array_var_init_decl_c(generate_pou_var_declaration.cc)");

@@ -500,7 +500,7 @@ void *generate_pou_invocation_c::visit(return_statement_c *symbol) {
 /* helper symbol for fb_invocation */
 /* param_assignment_list ',' param_assignment */
 void *generate_pou_invocation_c::visit(param_assignment_list_c *symbol) {
-  TRACE("param_assignment_list_c"); 
+  TRACE("param_assignment_list_c(generate_pou_invocation.cc)"); 
 
   std::vector<std::string> param_list;
   std::string temp_code;
@@ -530,7 +530,7 @@ void *generate_pou_invocation_c::visit(param_assignment_list_c *symbol) {
 
 
 void *generate_pou_invocation_c::visit(input_variable_param_assignment_c *symbol) {
-  TRACE("input_variable_param_assignment_c"); 
+  TRACE("input_variable_param_assignment_c(generate_pou_invocation.cc)"); 
   symbol->variable_name->accept(*this);
   symbol->expression->accept(*this);
   return NULL;
