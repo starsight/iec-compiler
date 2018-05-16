@@ -76,8 +76,13 @@ void *generate_pou_var_declaration_c::visit(derived_datatype_identifier_c *symbo
 }
 
 void *generate_pou_var_declaration_c::visit(         poutype_identifier_c *symbol) {
-    TRACE("poutype_identifier_c");
-    return print_token(symbol);
+    TRACE("poutype_identifier_c(generate_pou_var_declaration.cc)");
+
+    std::cout << "symbol->value = " << symbol->value << std::endl;
+
+    // modified for FB var declaration by wenjie
+    //return print_token(symbol); // 原始返回
+    return strdup(symbol->value);
 }
 
 /*********************/
@@ -490,15 +495,44 @@ void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
   // 添加到var_name_set，再放入对应变量集合中（如数组就是array_var_collector），最后清空var_name_set
   symbol->fb_name_list->accept(*this);
 
-  // 此行无用
+  // 此行非无用，FB变量的类型名在其中
   symbol->fb_spec_init->accept(*this);
 
+  // 此处参考 void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol)
+  pre_generate_info_c *code_info = pre_generate_info_c::getInstance();
+  function_block_type_c temp_fb_var;
+  for(auto elem : code_info->fb_type_collector){    // 查找FB变量对应类型
+      if(elem.fb_name == var_type){
+          temp_fb_var = elem;
+          elem.print();
+          break;
+      }
+  }
+  for(auto elem : var_name_set){            // 将FB变量加入FB变量集中
+      std::cout << "var_name_set:  "<<elem<< std::endl;
+      temp_fb_var.fb_name = var_type + " " + elem; // 将FB变量集中的变量名设为类型名+变量名的形式   如："OR_EDGE CC" "OR_EDGE CE"
+      pou_info->fb_var_collector.push_back(temp_fb_var);
+  }
 
-  // 此处参考 void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol)
-
+  // for(function_block_type_c elem : pou_info->fb_var_collector){            
+  //     std::cout << "elem: "<< elem.fb_name << std::endl;
+  // }
+  
   std::cout << "END fb_name_decl_c END "<< std::endl;
   var_name_set.clear();
 
+  return NULL;
+}
+
+/*  function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+void *generate_pou_var_declaration_c::visit(fb_spec_init_c *symbol) {
+  TRACE("fb_spec_init_c");
+  var_type = (char *)symbol->function_block_type_name->accept(*this);
+  if (symbol->structure_initialization != NULL) {
+    //s4o.print(" := ");
+    symbol->structure_initialization->accept(*this);
+  }
   return NULL;
 }
 

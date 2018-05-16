@@ -1,19 +1,24 @@
 ### 18-05-16
 **修改说明**
 - 1.把FB的使用流程按照**类型声明，变量定义初始化，语句调用，code_link&translator**，添加相关函数
+- 2.目前FB的处理思路为：先按照POU的处理模式把数据信息和代码信息记录下来，再把数据信息另外存储到功能块的描述类（`fb_type_collector`和`fb_var_collector`）中，这个存储过程和数组、结构体复杂数据结构是一致的（两个collector形式类似）。
+- 3.初步完成FB类型声明和变量声明的存储操作。定位下一步的问题在`struct`和`function_block`的区分上，同时FB变量调用FB代码的语句与平常赋值语句不在一个流程线上，在`visit(fb_invocation_c *symbol)`中处理其，有待完成。
+- 4.`fb_type_collector`赋值在`generate_iec.cc`的`void *visit(function_block_declaration_c *symbol)`中；`fb_var_collector`赋值在`generate_pou_var_declaration`的`void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) `中。
+- 5.其他待完成可通过搜索"TODO"定位（目前一处）。
 
 **修改文件说明**
 
-- 1.使用流程的前半部分主要函数梳理
+- 1.使用流程的前半部分主要函数梳理，值得注意的是`visit(fb_invocation_c *symbol)`是FB的程序语句代码的执行入口，作为对比，一般赋值语句在`generate_iec.cc`中的`void *visit( assignment_statement_c *symbol)`作为语句代码的入口（师兄对**寄存器的操作**及**指令码生成**全在此函数内部进行）。
 
 | 文件                            |                                        函数 |    功能    |
 | ------------------------------- | ------------------------------------------- | --------- |
 | generate_iec.cc                 | visit(function_block_declaration_c *symbol) | FB类型声明 |
 | generate_pou_var_declaration.cc |               visit(fb_name_decl_c *symbol) | FB变量声明 |
-| generate_iec.cc                 |              visit(fb_invocation_c *symbol) | 调用FB变量 |
+| generate_iec.cc                 |              visit(fb_invocation_c *symbol) | 调用FB中的语句 |
 
 - 2.增加**功能块描述类**`function_block_type_c`，位置在`pre_generate_info.hh`中，与结构体(`struct_type_c`)，数组(`array_type_c`)描述类对应。
 - 3.增加**FB类型**存储集合`fb_type_collector`，**FB类型变量**存储集合`fb_var_collector`。位置在`pre_generate_info.hh`中，与结构体，数组类型（和变量）存储集合对应。
+- 4.增加`pre_generate_info.cc`中函数`find_var_return_num`对`fb_var_collector`中变量的查找。
 ---
 ### 18-05-15
 **修改说明**

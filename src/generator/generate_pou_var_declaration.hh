@@ -232,6 +232,7 @@ public:
   void *visit(var1_list_c *symbol) ;
 
   void *visit(fb_name_decl_c *symbol);//wenjie
+  void *visit(fb_spec_init_c *symbol);//wenjie
   void *visit(fb_name_list_c *symbol);//wenjie
   void *visit(array_var_init_decl_c *symbol);//wenjie
 

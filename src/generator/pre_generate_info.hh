@@ -155,6 +155,11 @@ public:
 class function_block_type_c{
 public:
     std::string fb_name;
+	// std::vector<IValue> input_variable;
+	// std::vector<IValue> input_output_variable;
+	// std::vector<IValue> output_variable;
+	// std::vector<IValue> local_variable;
+	// std::vector<IValue> constant_value;
     std::vector<IValue> fb_value;
     void print(){
         std::cout << "fb name: " << fb_name << std::endl;
@@ -162,6 +167,10 @@ public:
             fb_value[i].print();
         }
     }
+
+	void insert_vector(std::vector<IValue> vector_variable){
+		fb_value.insert(fb_value.end(),vector_variable.begin(),vector_variable.end());
+	}
 };
 
 

@@ -1584,6 +1584,20 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("\n");
   symbol->fblock_body->accept(*this);
   s4o.indent_left();
+
+  // add for function_block type collector by wenjie
+   //定义FB类型描述结构体
+  function_block_type_c temp_function_block_type;
+
+  temp_function_block_type.fb_name = temp;
+  temp_function_block_type.insert_vector(pou_info->input_variable);
+  temp_function_block_type.insert_vector(pou_info->input_output_variable);
+  temp_function_block_type.insert_vector(pou_info->output_variable);
+  temp_function_block_type.insert_vector(pou_info->local_variable);
+  //temp_function_block_type.insert_vector(pou_info->constant_value);
+  temp_function_block_type.print();
+  pre_code_info->fb_type_collector.push_back(temp_function_block_type);
+
   s4o.print(s4o.indent_spaces + "END_FUNCTION_BLOCK\n\n\n");
 
    pou_info->print_detail_info();
@@ -2477,7 +2491,10 @@ void *visit( assignment_statement_c *symbol) {
   std::string rightreg;
   leftreg = (char*)symbol->l_exp->accept(temp_l_exp);
 
-  s4o.print(" := ");
+  s4o.print(typeid(*symbol->l_exp).name());
+  s4o.print("\n");
+  s4o.print(typeid(*symbol->r_exp).name());
+  s4o.print("\n");
 
   if(typeid(*symbol->r_exp) == typeid(function_invocation_c)) {
     rightreg = (char*)symbol->r_exp->accept(*this);
