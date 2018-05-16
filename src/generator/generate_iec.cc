@@ -1122,8 +1122,11 @@ void *visit(structured_var_init_decl_c *symbol) {
 
 /* name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
+// 个人（wenjie）认为FB类型的变量应该在这边初始化，但array、struct全部放到了generate_pou_declaration.cc中。
+// 因此，generate_iec.cc中的相关函数都没用，这里也把FB类型变量初始化放到generate_pou_declaration.cc文件中了（函数同名）。
+// 这里的功能只是做了一个输出打印
 void *visit(fb_name_decl_c *symbol) {
-  TRACE("fb_name_decl_c");
+  TRACE("fb_name_decl_c(generate_iec.cc)");
   symbol->fb_name_list->accept(*this);
   s4o.print(" : ");
   symbol->fb_spec_init->accept(*this);
@@ -1131,7 +1134,7 @@ void *visit(fb_name_decl_c *symbol) {
 }
 
 /* name_list ',' fb_name */
-void *visit(fb_name_list_c *symbol) {TRACE("fb_name_list_c"); return print_list(symbol, "", ", ");}
+void *visit(fb_name_list_c *symbol) {TRACE("fb_name_list_c(generate_iec.cc)"); return print_list(symbol, "", ", ");}
 
 /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */

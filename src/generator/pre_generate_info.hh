@@ -152,6 +152,18 @@ public:
     }
 };
 
+class function_block_type_c{
+public:
+    std::string fb_name;
+    std::vector<IValue> fb_value;
+    void print(){
+        std::cout << "fb name: " << fb_name << std::endl;
+        for(int i = 0; i < fb_value.size(); i ++){
+            fb_value[i].print();
+        }
+    }
+};
+
 
 
 //pou status :
@@ -247,6 +259,7 @@ public:
 
     std::vector<struct_type_c> struct_var_collector; // 结构体变量集
     std::vector<array_type_c> array_var_collector;  // 数组变量集
+    std::vector<function_block_type_c> fb_var_collector;  // 功能块变量集 by wenjie
 
 
 
@@ -427,6 +440,7 @@ public:
 	unsigned int count;
     std::vector<struct_type_c> struct_type_collector; // 结构体类型集
     std::vector<array_type_c>  array_type_collector;   // 数组类型集
+    std::vector<function_block_type_c>  fb_type_collector;   // 功能块类型集 by wenjie
 
 
 	void print(void);

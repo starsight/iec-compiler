@@ -1,11 +1,28 @@
 ### 18-05-16
 **修改说明**
+- 1.把FB的使用流程按照**类型声明，变量定义初始化，语句调用，code_link&translator**，添加相关函数
+
+**修改文件说明**
+
+- 1.使用流程的前半部分主要函数梳理
+| 文件                            |                                        函数 |    功能    |
+| :------------------------------ | ------------------------------------------: | :--------: |
+| generate_iec.cc                 | visit(function_block_declaration_c *symbol) | FB类型声明 |
+| generate_pou_var_declaration.cc |               visit(fb_name_decl_c *symbol) | FB变量声明 |
+| generate_iec.cc                 |              visit(fb_invocation_c *symbol) | 调用FB变量 |
+
+- 2.增加**功能块描述类**`function_block_type_c`，位置在`pre_generate_info.hh`中，与结构体(`struct_type_c`)，数组(`array_type_c`)描述类对应。
+- 3.增加**FB类型**存储集合`fb_type_collector`，**FB类型变量**存储集合`fb_var_collector`。位置在`pre_generate_info.hh`中，与结构体，数组类型（和变量）存储集合对应。
+
+---
+### 18-05-15
+**修改说明**
 - 1.`code link`过程的修改
 
 **修改文件说明**
 - 1.根据`translator.cc`发现`code_linker.cc`中对引用类型变量的编译生成描述形式的错误。原来为`S TUM TINT 1 TINT 2`形式，改为`S 2 TINT 1 TINT 2`，即第二个参数为这个复杂数据结构中的元素个数，而不是类型名。
 ---
-### 18-05-15
+### 18-05-14
 **修改说明**
 - 1.增加生成translator.exe的Makefile的gdb调试参数
 

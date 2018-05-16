@@ -5,7 +5,7 @@
 
 
 void *generate_pou_var_declaration_c::print_token(token_c *token) {
-
+  // std::cout << "token->value: " <<token->value<<std::endl;
   return NULL;
 }
 
@@ -62,6 +62,9 @@ void *generate_pou_var_declaration_c::print_unary_expression(symbol_c *symbol,
 /*******************************************/
 void *generate_pou_var_declaration_c::visit(                 identifier_c *symbol) {
     TRACE("identifier_c"); print_token(symbol);
+
+    std::cout << "symbol->value = " << symbol->value << std::endl;
+
     return strdup(symbol->value);
 }
 void *generate_pou_var_declaration_c::visit(derived_datatype_identifier_c *symbol) {
@@ -442,6 +445,7 @@ void *generate_pou_var_declaration_c::visit(var1_list_c *symbol) {
   TRACE("var1_list_c");
 
   std::cout << "symbol->n = " << symbol->n << std::endl;
+  std::cout << "before, var_name set.size()= " << var_name_set.size() << std::endl;
 
   for(int i = 0; i < symbol->n; i++) {
     std::string str = (char*)symbol->elements[i]->accept(*this);
@@ -451,11 +455,15 @@ void *generate_pou_var_declaration_c::visit(var1_list_c *symbol) {
     var_name_set.push_back(str);
   }
 
+  std::cout << "after, var_name set.size()= " << var_name_set.size() << std::endl;
   return NULL;
 }
 
 /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
+// 函数功能：FB类型的变量的声明（暂时没有做初始化）
+// add by wenjie 18-05-16
+// 暂时认为FB变量初始化时不会自定义初始化数据信息
 void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
   TRACE("fb_name_decl_c(generate_pou_var_declaration.cc)");
   /* Please read the comments inside the var1_init_decl_c
@@ -476,17 +484,51 @@ void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
    */
   //void_type_init();
 
+  //return NULL;
+  
+  // 思路： 先去void *generate_pou_var_declaration_c::visit(fb_name_list_c *symbol)中 
+  // 添加到var_name_set，再放入对应变量集合中（如数组就是array_var_collector），最后清空var_name_set
+  symbol->fb_name_list->accept(*this);
+
+  // 此行无用
+  symbol->fb_spec_init->accept(*this);
+
+
+  // 此处参考 void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol)
+
+  std::cout << "END fb_name_decl_c END "<< std::endl;
+  var_name_set.clear();
+
   return NULL;
 }
 
 /* fb_name_list ',' fb_name */
 void *generate_pou_var_declaration_c::visit(fb_name_list_c *symbol) {
-  TRACE("fb_name_list_c");
+  TRACE("fb_name_list_c(generate_pou_var_declaration.cc)");
   //declare_variables(symbol, true);
+  //return NULL;
+
+  // 此处参考 void *generate_pou_var_declaration_c::visit(var1_list_c *symbol)
+  std::cout << "fb_name_list, symbol->n = " << symbol->n << std::endl;
+  std::cout << "before, fb_name_list, var_name set.size()= " << var_name_set.size() << std::endl;
+
+  for(int i = 0; i < symbol->n; i++) {
+    std::string str = (char*)symbol->elements[i]->accept(*this);
+
+    std::cout << "fb_name_list, str = " << str << std::endl;
+
+    var_name_set.push_back(str);
+  }
+
+  std::cout << "after, fb_name_list, var_name set.size()= " << var_name_set.size() << std::endl;
+
   return NULL;
+
+  //print_list(symbol, "", ", ")
+  //return NULL;
 }
 
-// 数组变量的初始化
+// 数组变量的（声明）初始化
 /* var1_list ':' array_spec_init */ //wenjie
 void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
   TRACE("array_var_init_decl_c(generate_pou_var_declaration.cc)");
