@@ -196,4 +196,13 @@ void pre_generate_info_c::print(void)
 	std::cout << std::endl;
 	std::cout << "|++++ARRAY_TYPE INFO END++++++|" << std::endl;
 
+    std::cout << std::endl;
+	std::cout << "|++++FB_TYPE INFO START++++|" << std::endl;
+	for(auto elem : fb_type_collector){
+		elem.print();
+		std::cout << "    --------------      "     << std::endl;
+	}
+	std::cout << std::endl;
+	std::cout << "|++++FB_TYPE INFO END++++++|" << std::endl;
+
 }

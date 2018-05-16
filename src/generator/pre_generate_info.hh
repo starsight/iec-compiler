@@ -136,7 +136,7 @@ public:
 };
 
 /* 用于记录数组数据类型 */
-//数组需要以０为起始下标，否则size会出现错误导致一系列问题　多维数组每一维长度最好相同　wenjie 18-01-04
+//数组需要以0为起始下标，否则size会出现错误导致一系列问题　多维数组每一维长度最好相同　wenjie 18-01-04
 class array_type_c{
 public:
     std::string array_name;
