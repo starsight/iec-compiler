@@ -6,7 +6,7 @@
 - 3.步骤一：遍历输入参数（两种形式），将对应值mov到寄存器中。
 - 4.步骤二：根据预处理，添加`inout,out,local`变量到寄存器组，放在步骤一的后面。
 - 5.步骤三：ucall指令跳转到相应代码段。
-- 6.保存`inout,output,local`到对应寄存器,成功运行的前提是运行平台把数据拷贝回了原来的寄存器， 即 "ret (extra_save_base_num)" 语句被执行（实际代码为ret 0 0，这样看运行平台的处理），参见谭伯龙论文对`ucall/ret`语句的解释。
+- 6.步骤四：保存`inout,output,local`到对应寄存器,成功运行的前提是运行平台把数据拷贝回了原来的寄存器， 即 "ret (extra_save_base_num)" 语句被执行（实际代码为ret 0 0，这样看运行平台的处理），参见谭伯龙论文对`ucall/ret`语句的解释。
 
 **修改文件说明**
 - 1.`generate_iec.cc`中`void *visit(fb_invocation_c *symbol)`完成所有步骤；`void *load_fb_args_helper`和`void *save_fb_args_helper`辅助完成读和写。
