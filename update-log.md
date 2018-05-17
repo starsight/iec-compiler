@@ -1,6 +1,19 @@
+
 ### 18-05-16
 **修改说明**
-- 1.把FB的使用流程按照**类型声明，变量定义初始化，语句调用，code_link&translator**，添加相关函数
+- 1.一个预处理，四大步骤。
+- 2.预处理：为了形成连续的寄存器组，先选择构建`inout,out,local`变量的传入；再像函数一样添加input形参，最后把之前构建好的放在后面。因为构建过程会破坏寄存器连续，但又要保证先添加input，所以用vector保存对应的寄存器号。
+- 3.步骤一：遍历输入参数（两种形式），将对应值mov到寄存器中。
+- 4.步骤二：根据预处理，添加`inout,out,local`变量到寄存器组，放在步骤一的后面。
+- 5.步骤三：ucall指令跳转到相应代码段。
+- 6.保存`inout,output,local`到对应寄存器,成功运行的前提是运行平台把数据拷贝回了原来的寄存器， 即 "ret (extra_save_base_num)" 语句被执行（实际代码为ret 0 0，这样看运行平台的处理），参见谭伯龙论文对`ucall/ret`语句的解释。
+
+**修改文件说明**
+- 1.`generate_iec.cc`中`void *visit(fb_invocation_c *symbol)`完成所有步骤；`void *load_fb_args_helper`和`void *save_fb_args_helper`辅助完成读和写。
+---
+### 18-05-16
+**修改说明**
+- 1.把FB的使用流程按照**类型声明，变量定义初始化，语句调用，code_link&translator**，添加相关函数。
 - 2.目前FB的处理思路为：先按照POU的处理模式把数据信息和代码信息记录下来，再把数据信息另外存储到功能块的描述类（`fb_type_collector`和`fb_var_collector`）中，这个存储过程和数组、结构体复杂数据结构是一致的（两个collector形式类似）。
 - 3.初步完成FB类型声明和变量声明的存储操作。定位下一步的问题在`struct`和`function_block`的区分上，同时FB变量调用FB代码的语句与平常赋值语句不在一个流程线上，在`visit(fb_invocation_c *symbol)`中处理其，有待完成。
 - 4.`fb_type_collector`赋值在`generate_iec.cc`的`void *visit(function_block_declaration_c *symbol)`中；`fb_var_collector`赋值在`generate_pou_var_declaration`的`void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) `中。

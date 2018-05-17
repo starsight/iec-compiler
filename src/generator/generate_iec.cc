@@ -1584,16 +1584,22 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("\n");
   symbol->fblock_body->accept(*this);
   s4o.indent_left();
-
+  
+  pou_info->inst_code.push_back("ret ");
   // add for function_block type collector by wenjie
    //定义FB类型描述结构体
   function_block_type_c temp_function_block_type;
 
   temp_function_block_type.fb_name = temp;
-  temp_function_block_type.insert_vector(pou_info->input_variable);
-  temp_function_block_type.insert_vector(pou_info->input_output_variable);
-  temp_function_block_type.insert_vector(pou_info->output_variable);
-  temp_function_block_type.insert_vector(pou_info->local_variable);
+  
+	//std::cout << pou_info->input_variable.size() <<std::endl;
+	//std::cout << pou_info->input_output_variable.size() <<std::endl;
+	//std::cout << pou_info->output_variable.size() <<std::endl;
+	//std::cout << pou_info->local_variable.size() <<std::endl;
+  temp_function_block_type.insert_vector(pou_info->input_variable,1);//INPUT_TYPE
+  temp_function_block_type.insert_vector(pou_info->input_output_variable,2);//INPUT_OUTPUT_TYPE
+  temp_function_block_type.insert_vector(pou_info->output_variable,3);//OUTPUT_TYPE
+  temp_function_block_type.insert_vector(pou_info->local_variable,4);//LOCAL_TYPE
   //temp_function_block_type.insert_vector(pou_info->constant_value);
   temp_function_block_type.print();
   pre_code_info->fb_type_collector.push_back(temp_function_block_type);
@@ -2537,8 +2543,34 @@ void *visit(fb_invocation_c *symbol) {
   TRACE("fb_invocation_c");
 #ifdef _CODE_GENERATOR
     generate_pou_invocation_c temp_pou_invocation(pou_info);
-    symbol->fb_name->accept(temp_pou_invocation);
+    
+    std::string temp_pou_invo_name;
+    std::string temp_code="ucall ";
+    std::string reg_base_num;
+
+    temp_pou_invo_name = (char *)symbol->fb_name->accept(temp_pou_invocation);
+    int fb_var_index = pou_info->find_var_return_num(temp_pou_invo_name);
+    function_block_type_c fb_var = pou_info->fb_var_collector[fb_var_index];
+    
+    std::vector<std::string> str = utility_token_get_c::split(fb_var.fb_name, " ");
+    temp_pou_invo_name = str[0];
+    int extra_index = pou_info->find_var_return_num(str[1]);
+
     s4o.print("(");
+
+// ********************************************************预处理步骤
+    // 为了形成连续的寄存器组，先选择构建inout,out,local变量的传入；再像函数一样添加input形参，最后把之前构建好的放在后面。
+    // 因为构建过程会破坏寄存器连续，但又要保证先添加input，所以用vector保存对应的寄存器号。
+    std::vector<std::string> extra_var_vector;
+    for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){
+      std::string extra_str_temp = (char *)load_fb_args_helper(extra_index,i);
+      extra_var_vector.push_back(extra_str_temp);
+
+      s4o.print(extra_str_temp);
+    }
+
+// ********************************************************步骤1
+    // 这里是mov input形参到寄存器
     /* If the syntax parser is working correctly, at most one of the
     * following two symbols will be NULL, while the other is != NULL.
     * The two may be NULL simultaneously!
@@ -2552,9 +2584,51 @@ void *visit(fb_invocation_c *symbol) {
     // informal形式的参数传入 如(98,99)
     if (symbol->nonformal_param_list != NULL) {
       std::cout << "nonformal param list" << std::endl;
-      symbol->nonformal_param_list->accept(temp_pou_invocation);
+      // generate_pou_invocation.cc void *generate_pou_invocation_c::visit(param_assignment_list_c *symbol)
+      // 添加形参到寄存器
+      reg_base_num = (char *)symbol->nonformal_param_list->accept(temp_pou_invocation);
     }
+    
+    // 对于FB，还需要mov  inout out local 到寄存器
+    //int base_reg = std::stoi(reg_base_num) + fb_var.input_output_index;
+    std::string extra_code;
+    std::string extra_reg_num;
+    
+// ********************************************************步骤2(结合预处理)
+    // 写回到fb变量的inout,out,local变量的起始基地址
+    int extra_save_base_num = std::stoi(pou_info->get_pou_reg_num());
+
+    for(int i = fb_var.input_output_index,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){
+      extra_code = "mov ";
+      
+      extra_reg_num = pou_info->get_pou_reg_num();
+  	  pou_info->inc_pou_reg_num();
+
+  	  extra_code += extra_reg_num + std::string(" ");
+      //extra_code += (char *)mov_fb_args_helper(extra_index,i);
+      extra_code += extra_var_vector[j];
+      pou_info->inst_code.push_back(extra_code);
+    }
+  
+// ********************************************************步骤三
+    // ucall reg_base_num FB变量名 reg_base_num 指令构建
+    // 最后一个参数应该没有用，构造参考 void *visit(function_invocation_c *symbol)
+    temp_code += reg_base_num;
+    temp_code += std::string(" ") + temp_pou_invo_name + std::string(" ") + reg_base_num;
+    pou_info->inst_code.push_back(temp_code);
+
+// ********************************************************步骤四  
+    // 保存inout,output,local到对应寄存器,成功运行的前提是运行平台把数据拷贝回了原来的寄存器，
+    // 即 "ret (extra_save_base_num)"语句被执行（实际代码为ret 0 0，这样看运行平台的处理），参见谭伯龙论文对ucall/ret语句的解释。
+    //temp_code = std::string("mov ") + leftreg + std::string(" ") + rightreg;
+    for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){
+      //extra_code = "mov ";
+      save_fb_args_helper(extra_index,i,std::to_string(extra_save_base_num));
+      extra_save_base_num++;
+    }
+
     s4o.print(")");
+    return strdup(reg_base_num.c_str());
 #else
     symbol->fb_name->accept(*this);
     s4o.print("(");
@@ -2573,6 +2647,91 @@ void *visit(fb_invocation_c *symbol) {
     s4o.print(")");
 #endif
   return NULL;
+}
+
+void *save_fb_args_helper(int record_num,int field_num,std::string reg_num){
+  std::string temp_code = std::string("kload ") ;
+	std::string temp_reg_numB = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numB + std::string(" ");
+
+	IValue iv;
+	iv.type = TUINT;
+	iv.v.value_u = record_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+// ********************************************************
+	temp_code = std::string("kload ") ;
+	std::string temp_reg_numC = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numC + std::string(" ");
+
+	iv.type = TUINT;
+	iv.v.value_u = field_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+
+// ********************************************************
+// ********************************************************
+	temp_code = "setfield ";
+
+	//std::string temp_reg_numA = pou_info->get_pou_reg_num();
+	//pou_info->inc_pou_reg_num();
+	temp_code += reg_num;
+
+	temp_code += std::string(" ") + temp_reg_numB + std::string(" ") + temp_reg_numC;
+	pou_info->inst_code.push_back(temp_code);
+
+  return NULL;
+}
+
+// 加载fb变量对应inout,output,local变量
+void *load_fb_args_helper(int record_num,int field_num){
+  std::string temp_code = std::string("kload ") ;
+	std::string temp_reg_numB = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numB + std::string(" ");
+
+	IValue iv;
+	iv.type = TUINT;
+	iv.v.value_u = record_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+// ********************************************************
+	temp_code = std::string("kload ") ;
+	std::string temp_reg_numC = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numC + std::string(" ");
+
+	iv.type = TUINT;
+	iv.v.value_u = field_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+
+// ********************************************************
+// ********************************************************
+	temp_code = "getfield ";
+
+	std::string temp_reg_numA = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+	temp_code += temp_reg_numA;
+
+	temp_code += std::string(" ") + temp_reg_numB + std::string(" ") + temp_reg_numC;
+	pou_info->inst_code.push_back(temp_code);
+
+  return strdup(temp_reg_numA.c_str());
 }
 
 

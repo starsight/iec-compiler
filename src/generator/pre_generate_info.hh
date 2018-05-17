@@ -32,6 +32,11 @@ typedef unsigned char internal_value_t;
 #define TREF    5
 
 
+#define INPUT_TYPE   1
+#define INPUT_OUTPUT_TYPE 2
+#define OUTPUT_TYPE 3
+#define LOCAL_TYPE    4
+
 typedef signed long  IInt;
 typedef unsigned long IUInt;
 typedef double   IDouble;
@@ -161,6 +166,10 @@ public:
 	// std::vector<IValue> local_variable;
 	// std::vector<IValue> constant_value;
     std::vector<IValue> fb_value;
+	int input_index =-1;
+	int input_output_index=-1;
+	int output_index=-1;
+	int local_index=-1;
     void print(){
         std::cout << "fb name: " << fb_name << std::endl;
         for(int i = 0; i < fb_value.size(); i ++){
@@ -168,7 +177,31 @@ public:
         }
     }
 
-	void insert_vector(std::vector<IValue> vector_variable){
+	void insert_vector(std::vector<IValue> vector_variable,int type){
+		if(type==INPUT_TYPE&&input_index==-1){
+			input_index = fb_value.size();
+		}else if(type==INPUT_OUTPUT_TYPE&&input_output_index==-1){
+			input_output_index = fb_value.size();
+
+			input_index = input_index==-1?input_output_index:input_index;
+
+		}else if(type==OUTPUT_TYPE&&output_index==-1){
+			output_index = fb_value.size();
+
+			input_output_index = input_output_index==-1?output_index:input_output_index;
+			input_index = input_index==-1?input_output_index:input_index;
+
+		}else if(type==LOCAL_TYPE&&local_index==-1){
+			local_index = fb_value.size();
+
+			output_index = output_index==-1?local_index:output_index;
+			input_output_index = input_output_index==-1?output_index:input_output_index;
+			input_index = input_index==-1?input_output_index:input_index;
+
+		}else{
+			return ;
+		}
+		
 		fb_value.insert(fb_value.end(),vector_variable.begin(),vector_variable.end());
 	}
 };

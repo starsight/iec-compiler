@@ -9,7 +9,7 @@
 	USERA := A ;
 
 END_FUNCTION
-
+*)
 FUNCTION USERB : INT
 
 	VAR_INPUT
@@ -24,7 +24,11 @@ FUNCTION USERB : INT
 	RET:=10;
 	USERB := RET ;
 
-END_FUNCTION*)
+END_FUNCTION
+
+TYPE AI:
+  ARRAY[0..3] OF INT :=[1,2,3,4];
+END_TYPE
 
 FUNCTION_BLOCK OR_EDGE 
    	VAR_INPUT
@@ -32,13 +36,20 @@ FUNCTION_BLOCK OR_EDGE
 		INPU2 : INT ;
 	END_VAR
 
+    VAR
+		LOCAL1  : INT :=11;
+    END_VAR
+
+    VAR_IN_OUT
+		IN_OUT1  : INT ;
+    END_VAR
+
     VAR_OUTPUT 
-        OUTPU1 : INT;
-        OUTPU2 :INT;
+        OUTPU1 : INT :=2;
     END_VAR
 	
     INPU1 := 2 ;
-    OUTPU2:=INPU1;
+    OUTPU1:=INPU1;
 END_FUNCTION_BLOCK
 
 PROGRAM MAIN
@@ -47,20 +58,18 @@ PROGRAM MAIN
 	END_VAR
 
     VAR
-        RET : INT := 13;
 		CC  : OR_EDGE;
+		CD  : AI;
+		CE  : OR_EDGE;
     END_VAR
 
 	VAR_OUTPUT
 		OUT1 : INT :=14;
-        OUT2 : INT :=15;
 	END_VAR
 
-	CC(INPU1:=98, INPU2:=99);
-	OUT1 := CC.OUTPU2 + 2;
+	CC(98, 99);
+	OUT1 := IN + 2;
 
-    (*OUT2 := USERA(IN,RET);
-    OUT1 := USERB(IN,RET);*)
 
 END_PROGRAM
 (*
