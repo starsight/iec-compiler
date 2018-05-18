@@ -34,7 +34,9 @@ private:
 	int cal_array_offset_helper(symbol_c *elements);
 	int cal_array_offset_multi_helper(std::vector<int> each_row_count,int from);
 	int cal_array_offset(std::vector<int> each_row_count,subscript_list_c *symbol);
-	
+	// function block generate code helper
+	void *fb_var_generate_r_helper(int record_str,int field_num);
+
 	/*******************************************/
 	/* B 1.1 - Letters, digits and identifiers */
 	/*******************************************/

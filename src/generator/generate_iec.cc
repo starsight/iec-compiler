@@ -2550,11 +2550,12 @@ void *visit(fb_invocation_c *symbol) {
 
     temp_pou_invo_name = (char *)symbol->fb_name->accept(temp_pou_invocation);
     int fb_var_index = pou_info->find_var_return_num(temp_pou_invo_name);
-    function_block_type_c fb_var = pou_info->fb_var_collector[fb_var_index];
-    
+    int extra_index = pou_info->array_struct_fb_info_collector[fb_var_index].convert_index;
+    function_block_type_c fb_var = pou_info->fb_var_collector[extra_index];
+
     std::vector<std::string> str = utility_token_get_c::split(fb_var.fb_name, " ");
-    temp_pou_invo_name = str[0];
-    int extra_index = pou_info->find_var_return_num(str[1]);
+    // str = "OR_EDGE CC"   str[0] = "OR_EDGE"; str[1] = "CC" == temp_pou_invo_name
+    temp_pou_invo_name = str[0];  
 
     s4o.print("(");
 
@@ -2563,7 +2564,7 @@ void *visit(fb_invocation_c *symbol) {
     // 因为构建过程会破坏寄存器连续，但又要保证先添加input，所以用vector保存对应的寄存器号。
     std::vector<std::string> extra_var_vector;
     for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){
-      std::string extra_str_temp = (char *)load_fb_args_helper(extra_index,i);
+      std::string extra_str_temp = (char *)load_fb_args_helper(fb_var_index,i);
       extra_var_vector.push_back(extra_str_temp);
 
       s4o.print(extra_str_temp);
@@ -2623,7 +2624,7 @@ void *visit(fb_invocation_c *symbol) {
     //temp_code = std::string("mov ") + leftreg + std::string(" ") + rightreg;
     for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){
       //extra_code = "mov ";
-      save_fb_args_helper(extra_index,i,std::to_string(extra_save_base_num));
+      save_fb_args_helper(fb_var_index,i,std::to_string(extra_save_base_num));
       extra_save_base_num++;
     }
 

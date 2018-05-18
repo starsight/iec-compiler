@@ -61,7 +61,20 @@ int pre_generate_pou_info_c::find_var_return_num(std::string var_name)
 		}
 		count ++;
 	}
+	// wenjie  返回的index改为array_struct_fb_info_collector中的index，原来是各个var_collector中的index
 	count = 0;
+	for(array_struct_fb_info_c elem : array_struct_fb_info_collector){
+		std::vector<std::string> str = utility_token_get_c::split(elem.var_name, " ");
+		std::cout << "info_name: " << elem.var_name << std::endl;
+		std::cout << "var_name: " << var_name << std::endl;
+		if (str[1] == var_name){
+			return count;
+		}
+		count++;
+	}
+
+	count = 0;
+	/* 返回的index改为array_struct_fb_info_collector中的index，原来是各个var_collector中的index
 	std::cout << "struct_var_collector.size: " << struct_var_collector.size() << std::endl;
 	for(auto elem : struct_var_collector){
 		std::vector<std::string> str = utility_token_get_c::split(elem.struct_name, " ");
@@ -72,6 +85,7 @@ int pre_generate_pou_info_c::find_var_return_num(std::string var_name)
 		}
 		count ++;
 	}
+
 	//wenjie
 	count=0;
 	std::cout << "array_var_collector.size: " << array_var_collector.size() << std::endl;
@@ -95,7 +109,7 @@ int pre_generate_pou_info_c::find_var_return_num(std::string var_name)
 			return count;
 		}
 		count ++;
-	}
+	}*/
 	return -1;
 }
 

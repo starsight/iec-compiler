@@ -512,6 +512,14 @@ void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
       std::cout << "var_name_set:  "<<elem<< std::endl;
       temp_fb_var.fb_name = var_type + " " + elem; // 将FB变量集中的变量名设为类型名+变量名的形式   如："OR_EDGE CC" "OR_EDGE CE"
       pou_info->fb_var_collector.push_back(temp_fb_var);
+
+      array_struct_fb_info_c temp_info_var;
+      temp_info_var.var_name = temp_fb_var.fb_name;
+      // 0:struct   1:array   2:fb
+      temp_info_var.type = 2;
+      temp_info_var.convert_index = pou_info->fb_var_collector.size()-1;
+      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
   }
 
   // for(function_block_type_c elem : pou_info->fb_var_collector){            
@@ -608,6 +616,14 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
             ivalue.name = elem.array_name+"_"+std::to_string(num);//突然发现可以直接把信息存到name里，为了程序稳定没有使用这种，但肯定是可以的
             std::cout<<temp_struct_var.struct_name<<"-"<<num<<std::endl;
             //std::cout<< ivalue.v.value_p.value_index<<std::endl;
+
+            array_struct_fb_info_c temp_info_var;
+            temp_info_var.var_name = temp_struct_var.struct_name;
+            // 0:struct   1:array   2:fb
+            temp_info_var.type = 0;
+            temp_info_var.convert_index = pou_info->struct_var_collector.size()-1;
+            temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+            pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
           }
         }
 
@@ -621,7 +637,16 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
       std::cout << "array_name=  "<<var_type + " elem =" + elem<< std::endl;
       temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集(应该写错了，是array_var_collector，数组变量集)中的变量名设为类型名+变量名的形式
       pou_info->array_var_collector.push_back(temp_array_var);
-  
+
+    if(temp_array_var.type!=TREF){
+      array_struct_fb_info_c temp_info_var;
+      temp_info_var.var_name = temp_array_var.array_name;
+      // 0:struct   1:array   2:fb
+      temp_info_var.type = 1;
+      temp_info_var.convert_index = pou_info->array_var_collector.size()-1;
+      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
+    }
   }
   std::cout << "END array_var_init_decl_c END "<< std::endl;
   
@@ -651,6 +676,13 @@ void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol) 
       temp_struct_var.struct_name = var_type + " " + elem; // 将结构体变量集中的变量名设为类型名+变量名的形式
       pou_info->struct_var_collector.push_back(temp_struct_var);
 
+      array_struct_fb_info_c temp_info_var;
+      temp_info_var.var_name = temp_struct_var.struct_name;
+      // 0:struct   1:array   2:fb
+      temp_info_var.type = 0;
+      temp_info_var.convert_index = pou_info->struct_var_collector.size()-1;
+      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
     //   /* 将结构体变量索引信息加入POU变量集中, 暂时放一放 */
     //   IValue iv;
     //   iv.name = elem;

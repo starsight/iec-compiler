@@ -206,6 +206,19 @@ public:
 	}
 };
 
+class array_struct_fb_info_c{
+public:
+	// 0:struct 1:array 2:fb	
+	int type;	
+	
+	std::string var_name;
+
+	// array_var_collector struct_var_collector fb_var_collector中的位置信息
+	int convert_index;
+
+	// array_struct_fb_info_collector 中的位置信息
+	int origin_index;
+};
 
 
 //pou status :
@@ -302,7 +315,7 @@ public:
     std::vector<struct_type_c> struct_var_collector; // 结构体变量集
     std::vector<array_type_c> array_var_collector;  // 数组变量集
     std::vector<function_block_type_c> fb_var_collector;  // 功能块变量集 by wenjie
-
+	std::vector<array_struct_fb_info_c> array_struct_fb_info_collector; //记录索引
 
 
 public:

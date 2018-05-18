@@ -55,21 +55,24 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
   std::cout << "subscripted_variable = " << subscript << std::endl;
   int collector_index = std::stoi(subscript);
 
-  array_type_index = collector_index;
+	//校正index
+	array_type_index = pou_info->array_struct_fb_info_collector[collector_index].convert_index;
+
+  //array_type_index = collector_index;
 
   int * subscript_list = (int *)symbol->subscript_list->accept(*this);//跳转visit(subscript_list_c *symbol)
   //std::cout << "subscript_list = " << subscript_list << std::endl;
 
   int array_index = *subscript_list;
 
-  if(pou_info->array_var_collector[collector_index].type==TREF){//结构体类型数组 构造成AI_4 数组类型名_struct_var_collector的index
-    std::vector<std::string> struct_array_type_var_name = utility_token_get_c::split(pou_info->array_var_collector[collector_index].array_name, " ");
+  if(pou_info->array_var_collector[array_type_index].type==TREF){//结构体类型数组 构造成AI_4 数组类型名_struct_var_collector的index
+    std::vector<std::string> struct_array_type_var_name = utility_token_get_c::split(pou_info->array_var_collector[array_type_index].array_name, " ");
     std::string  struct_array_type_name = struct_array_type_var_name[0];
-    int struct_var_collector_index = pou_info->array_var_collector[collector_index].init_value[array_index].v.value_p.value_index;
+    int struct_var_collector_index = pou_info->array_var_collector[array_type_index].init_value[array_index].v.value_p.value_index;
     std::string IREF_str =struct_array_type_name+"_"+utility_token_get_c::numeric_to_string(struct_var_collector_index);
     std::cout<<IREF_str<<std::endl;
     //直接把信息存到name里，为了程序稳定没有使用这种，但肯定是可以的
-    std::cout<<pou_info->array_var_collector[collector_index].init_value[array_index].name<<std::endl;
+    std::cout<<pou_info->array_var_collector[array_type_index].init_value[array_index].name<<std::endl;
     int record_num;
 	  if((record_num = pou_info->find_var_return_num(IREF_str)) == -1)
 	    ERROR_MSG("cannot find the specific variable !");
@@ -87,7 +90,7 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
 
   IValue iv;
   iv.type = TUINT;
-  iv.v.value_u = collector_index;//
+  iv.v.value_u = collector_index;// array_struct_fb_info_collector 中的index
   pou_info->constant_value.push_back(iv);
 
   temp_code += pou_info->get_pou_const_num();
@@ -191,9 +194,36 @@ void *generate_assign_l_exp_c::visit(structured_variable_c *symbol) {
   //  std::string temp = pou_info->struct_var_collector[record_num].elements[i].name;
   //  std::cout << temp << std::endl;
   // }
+
+  
+	//校正index 
+	//record_num为array_struct_fb_info_collector中的位置；struct_type_index为struct_var_collector(或fb_var_collector)中的位置
+	int struct_type_index =pou_info->array_struct_fb_info_collector[record_num].convert_index;
+
+// ********************************************************
+	if (pou_info->fb_var_collector.size() != 0 && struct_type_index < pou_info->fb_var_collector.size()){
+		bool is_find = false;
+		for (int i = 0; i < pou_info->fb_var_collector[struct_type_index].fb_value.size(); i++){
+			std::string temp = pou_info->fb_var_collector[struct_type_index].fb_value[i].name;
+			if (temp == field_str){
+				field_num = i;
+				is_find = true;
+				break;
+			}
+		}
+
+		if (is_find){
+			std::string fb_base_reg = (char *)fb_var_generate_l_helper(record_num, field_num);
+			return strdup(fb_base_reg.c_str());
+		}
+	}
+
+	// ********************************************************
+
+
   // /* 获得对应字段在该结构体类型中的索引 */
-  for(int i = 0; i < pou_info->struct_var_collector[record_num].elements.size(); i ++){
-    std::string temp = pou_info->struct_var_collector[record_num].elements[i].name;
+  for(int i = 0; i < pou_info->struct_var_collector[struct_type_index].elements.size(); i ++){
+    std::string temp = pou_info->struct_var_collector[struct_type_index].elements[i].name;
     if(temp == field_str){
       field_num = i;
       break;
@@ -245,5 +275,39 @@ void *generate_assign_l_exp_c::visit(structured_variable_c *symbol) {
   // return NULL;
 }
 
+void *generate_assign_l_exp_c::fb_var_generate_l_helper(int record_num,int field_num){
+	std::string temp_code = std::string("kload ") ;
+	std::string temp_reg_numB = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numB + std::string(" ");
+
+	IValue iv;
+	iv.type = TUINT;
+	iv.v.value_u = record_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+// ********************************************************
+	temp_code = std::string("kload ") ;
+	std::string temp_reg_numC = pou_info->get_pou_reg_num();
+	pou_info->inc_pou_reg_num();
+
+	temp_code += temp_reg_numC + std::string(" ");
+
+	iv.type = TUINT;
+	iv.v.value_u = field_num;
+	pou_info->constant_value.push_back(iv);
+
+	temp_code += pou_info->get_pou_const_num();
+	pou_info->inst_code.push_back(temp_code);
+
+// ********************************************************
+// ********************************************************
+
+  std::string retstring = temp_reg_numB + std::string("\\") + temp_reg_numC;
+  return strdup(retstring.c_str());
+}
 
 

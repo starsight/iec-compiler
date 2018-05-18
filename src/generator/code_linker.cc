@@ -70,6 +70,45 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 	}
 	temp_obj_task.user_pou_list.push_back(temp_user_pou);
 
+	std::cout << pou_iterator->array_struct_fb_info_collector.size() << std::endl;
+	for (auto collector_temp : pou_iterator->array_struct_fb_info_collector){
+		std::cout << collector_temp.var_name << "---" << collector_temp.type << std::endl;
+		if (collector_temp.type == 0){
+			//struct
+			auto collector = pou_iterator-> struct_var_collector[collector_temp.convert_index];
+			temp_obj_task.refval_list.push_back(collector.elements);
+			//int ix = collector.struct_name.find(" ");
+			//temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
+			// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
+			int cnt = collector.elements.size();
+			temp_obj_task.reftp_list.push_back(std::string("S ") + std::to_string(cnt));
+		}
+		else if (collector_temp.type == 1){
+			//array
+			auto collector = pou_iterator-> array_var_collector[collector_temp.convert_index];
+
+			if(collector.type==TREF){
+				continue;
+			}
+			temp_obj_task.refval_list.push_back(collector.init_value);
+			//int ix = collector.array_name.find(" ");
+			//temp_obj_task.reftp_list.push_back(std::string("A ") + collector.array_name.substr(0,ix));
+			// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
+			int cnt = collector.init_value.size();
+			temp_obj_task.reftp_list.push_back(std::string("A ") + std::to_string(cnt));
+		}else if(collector_temp.type == 2){
+			//fb
+			auto collector = pou_iterator-> fb_var_collector[collector_temp.convert_index];
+			temp_obj_task.refval_list.push_back(collector.fb_value);
+			//int ix = collector.struct_name.find(" ");
+			//temp_obj_task.reftp_list.push_back(std::string("S ") + collector.struct_name.substr(0,ix));
+			// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
+			int cnt = collector.fb_value.size();
+			temp_obj_task.reftp_list.push_back(std::string("FB ") + std::to_string(cnt));
+		}
+	}
+
+	/* 被上文 array_struct_fb_info_collector 遍历替代
 	// insert refval
 	for(auto collector: pou_iterator-> struct_var_collector){
 		temp_obj_task.refval_list.push_back(collector.elements);
@@ -90,7 +129,7 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 		// 复杂数据结构第二列保存的应该是元素个数信息，而不是类型名(如TUM、AI等) by wenjie
 		int cnt = collector.init_value.size();
 		temp_obj_task.reftp_list.push_back(std::string("A ") + std::to_string(cnt));
-	}
+	}*/
 
 
 	auto end_index = temp_obj_task.code_list.end();

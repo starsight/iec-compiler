@@ -221,7 +221,7 @@ public:
 			bool first_time=true;
 			for(auto elem:refval_list[i]){
 				
-				if(reftp_list[i][0]=='S'||first_time){
+				if(reftp_list[i][0]=='S'||reftp_list[i][0]=='F'||first_time){
 					out << std::string(" ") << (elem.type == TINT ? "TINT":((elem.type == TUINT) ? "TUINT" : "TDOUBLE"));					
 					first_time =false;
 				}

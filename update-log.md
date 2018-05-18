@@ -1,5 +1,19 @@
+### 18-05-18
+**修改说明**
 
-### 18-05-16
+完成FB变量的赋值，代码段调用功能。主要解决的问题有：
+
+- 1.赋值语句左右侧的处理，基本仿照struct处理形式处理；
+- 2.与结构体的区分（都是A.B形式），为了以后复杂FB变量扩展，区分出FB和struct后，FB内容提出到新函数中处理；
+- 3.统一struct，array，fb变量的起始位置，把三者信息保存到新的vector中，做一次转换处理。
+
+**修改文件说明**
+- 1.在`pre_generate_info.hh`中增加`array_struct_fb_info_c`结构，把`(struct/array/fb)_var_collector`三个变量集合中的变量名、类别(0:struct 1:array 2:fb)、位置（三个集合中的位置，都是从0开始，convert_index）及转换到的`vector<array_struct_fb_info_c>`  统一保存的位置信息（三个集合信息合并的集合，origin_index）。这样保证了运行平台中使用一个vector存储复杂数据类型的index信息统一，保证生成指令码的正确性（struct,array,fb变量不是从0开始确定index）。
+- 2.在`pre_generate_info.hh`中增加`std::vector<array_struct_fb_info_c> array_struct_fb_info_collector`（和`(struct/array/fb)_var_collector`放在一起），如上所说，记录索引信息，统一index信息（三个vector的索引各自独立从0开始，运行平台无法区分）。
+- 3.修改`find_var_return_num(..)`，之前对于三类复杂数据结构是各自到`(struct/array/fb)_var_collector`中查找，现在改为到`array_struct_fb_info_collector`中查找，返回的位置信息为统一索引地址，各自集合的位置信息保存在`array_struct_fb_info_c`中的convert_index中。
+- 4.在之前程序中，由于`find_var_return_num(..)`返回的是各自集合的索引，所以只需要去对应集合（`(struct/array/fb)_var_collector`)查到到实际var，再找到偏移地址，构建语句。但由于`find_var_return_num(..)`返回的位置变为统一索引，所以需要先去`array_struct_fb_info_collector`查找到对应的info，根据其convert_index到`(struct/array/fb)_var_collector`集合中找到对应实际var，再找到偏移地址，构建语句。 `generate_assign_r_exp.cc`和`generate_assign_l_exp.cc`中主要索引转换的修改，为了区分struct和fb添加`fb_var_generate_r_helper`和`fb_var_generate_l_helper`辅助函数完成指令生成。
+---
+### 18-05-17
 **修改说明**
 - 1.一个预处理，四大步骤。
 - 2.预处理：为了形成连续的寄存器组，先选择构建`inout,out,local`变量的传入；再像函数一样添加input形参，最后把之前构建好的放在后面。因为构建过程会破坏寄存器连续，但又要保证先添加input，所以用vector保存对应的寄存器号。
