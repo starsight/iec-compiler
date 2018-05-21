@@ -1,3 +1,8 @@
+### 18-05-21
+**修改说明**
+- 1.编译iec-compiler时，一起编译translator；整理编译生成的文件(translator.exe)到根目录中(translator)．
+- 2.移除iec-compiler程序最后执行的暂停程序，linux下不支持．
+---
 ### 18-05-18
 **修改说明**
 

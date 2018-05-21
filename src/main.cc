@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
   if (stage4(tree_root, builddir) < 0)
     return EXIT_FAILURE;
   CP(4);
-  system("pause");//for log wenjie
+  //system("pause");//for log wenjie
   return 0;
 }
 
