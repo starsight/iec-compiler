@@ -518,7 +518,7 @@ void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
       // 0:struct   1:array   2:fb
       temp_info_var.type = 2;
       temp_info_var.convert_index = pou_info->fb_var_collector.size()-1;
-      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.empty()?0:pou_info->array_struct_fb_info_collector.back().origin_index+1;
       pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
   }
 
@@ -622,7 +622,7 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
             // 0:struct   1:array   2:fb
             temp_info_var.type = 0;
             temp_info_var.convert_index = pou_info->struct_var_collector.size()-1;
-            temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+            temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.empty()?0:pou_info->array_struct_fb_info_collector.back().origin_index+1;
             pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
           }
         }
@@ -638,15 +638,19 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
       temp_array_var.array_name = var_type + " " + elem; // 将结构体变量集(应该写错了，是array_var_collector，数组变量集)中的变量名设为类型名+变量名的形式
       pou_info->array_var_collector.push_back(temp_array_var);
 
-    //if(temp_array_var.type!=TREF){
+
       array_struct_fb_info_c temp_info_var;
       temp_info_var.var_name = temp_array_var.array_name;
       // 0:struct   1:array   2:fb
       temp_info_var.type = 1;
       temp_info_var.convert_index = pou_info->array_var_collector.size()-1;
-      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      if(temp_array_var.type!=TREF){
+        temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.empty()?0:pou_info->array_struct_fb_info_collector.back().origin_index+1;          
+      }else{
+        temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.empty()?-1:pou_info->array_struct_fb_info_collector.back().origin_index;
+      }
       pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
-    //}
+    
   }
   std::cout << "END array_var_init_decl_c END "<< std::endl;
   
@@ -681,7 +685,7 @@ void *generate_pou_var_declaration_c::visit(structured_var_init_decl_c *symbol) 
       // 0:struct   1:array   2:fb
       temp_info_var.type = 0;
       temp_info_var.convert_index = pou_info->struct_var_collector.size()-1;
-      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.size();
+      temp_info_var.origin_index = pou_info->array_struct_fb_info_collector.empty()?0:pou_info->array_struct_fb_info_collector.back().origin_index+1;
       pou_info->array_struct_fb_info_collector.push_back(temp_info_var);
     //   /* 将结构体变量索引信息加入POU变量集中, 暂时放一放 */
     //   IValue iv;

@@ -72,7 +72,7 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 
 	std::cout << pou_iterator->array_struct_fb_info_collector.size() << std::endl;
 	for (auto collector_temp : pou_iterator->array_struct_fb_info_collector){
-		std::cout << collector_temp.var_name << "---" << collector_temp.type << std::endl;
+		std::cout << collector_temp.var_name << "---" << collector_temp.type << "--" <<collector_temp.origin_index << std::endl;
 		if (collector_temp.type == 0){
 			//struct
 			auto collector = pou_iterator-> struct_var_collector[collector_temp.convert_index];

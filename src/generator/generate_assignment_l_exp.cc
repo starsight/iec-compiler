@@ -90,7 +90,7 @@ void *generate_assign_l_exp_c::visit(array_variable_c *symbol) {
 
   IValue iv;
   iv.type = TUINT;
-  iv.v.value_u = collector_index;// array_struct_fb_info_collector 中的index
+  iv.v.value_u = pou_info->array_struct_fb_info_collector[collector_index].origin_index;// array_struct_fb_info_collector 中的剔除TREF变量后index
   pou_info->constant_value.push_back(iv);
 
   temp_code += pou_info->get_pou_const_num();
@@ -240,7 +240,7 @@ void *generate_assign_l_exp_c::visit(structured_variable_c *symbol) {
 
   IValue iv;
   iv.type = TUINT;
-  iv.v.value_u = record_num;
+  iv.v.value_u = pou_info->array_struct_fb_info_collector[record_num].origin_index;
   pou_info->constant_value.push_back(iv);
 
   temp_code += pou_info->get_pou_const_num();
@@ -284,7 +284,7 @@ void *generate_assign_l_exp_c::fb_var_generate_l_helper(int record_num,int field
 
 	IValue iv;
 	iv.type = TUINT;
-	iv.v.value_u = record_num;
+	iv.v.value_u = pou_info->array_struct_fb_info_collector[record_num].origin_index;
 	pou_info->constant_value.push_back(iv);
 
 	temp_code += pou_info->get_pou_const_num();
