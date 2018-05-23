@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <functional>
+#include <stdint.h>
 
 
 
@@ -359,11 +360,14 @@ void dump_inst(std::ofstream &outfile, std::vector<std::string> &result) {
 void dump_value(std::ofstream &outfile, std::vector<std::string> &result) {
 	if(result[1] == "TUINT") {
 		outfile << (char)2;
-		unsigned long tmp = std::stoul(result[2]);
+		// unsigned long tmp = std::stoul(result[2]);
+		uint64_t tmp = std::stoul(result[2]);
+		std::cout << "unsigned int " << tmp << std::endl;
 		outfile.write((char*)&tmp, 8);
 	} else if(result[1] == "TINT") {
 		outfile << (char)1;
-		long tmp = std::stol(result[2]);
+		// long tmp = std::stol(result[2]);
+		int64_t tmp = std::stol(result[2]);
 		outfile.write((char*)&tmp, 8);
 	} else if(result[1] == "TDOUBLE") {
 		outfile << (char)3;
