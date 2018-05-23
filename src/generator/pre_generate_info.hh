@@ -216,7 +216,8 @@ public:
 	// array_var_collector struct_var_collector fb_var_collector中的位置信息
 	int convert_index;
 
-	// array_struct_fb_info_collector 中的位置信息
+	// array_struct_fb_info_collector 中的位置信息 
+	// 屏蔽TREF类型的变量（遇到TREF类型变量，此值不递增，否则递增）
 	int origin_index;
 };
 
