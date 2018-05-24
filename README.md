@@ -35,7 +35,8 @@ A compiler for IEC61131-3 language
 
 ---
 1. 数组赋值时的边界检查 cal_array_offset_multi_helper
-2. 
+2. 由于在`generate_pou_invocation.cc`中未添加对数组，结构体的支持，因此函数调用参数不允许出现以上数据结构。
+3. 
 
 ## Update Log
 

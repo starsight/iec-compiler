@@ -159,6 +159,7 @@ void code_linker_c::link_task_pou(std::list<pre_generate_pou_info_c>::iterator& 
 
 			this->split(*start_index, " ", &code_slice);
 			if(code_slice.size() != 4) { 	// 若ucall指令格式不对，则输出错误信息
+			// 在某些场景下，会因为已经转化而进入此，但这部分是正确的。对于嵌套带来的其他问题，未进行验证。 wenjie
 				std::cout << "ucall convertion error" << std::endl;
 				for(auto elem : code_slice)
 					std::cout << elem << std::string(" ") ;
