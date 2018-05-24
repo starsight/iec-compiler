@@ -8,5 +8,5 @@ cd ../
 cd src/objgen/
 rm *.exe
 make
-mv translator.exe ../../translator
+cp translator.exe ../../translator
 cd ../../

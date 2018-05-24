@@ -1,0 +1,94 @@
+
+TYPE AI2:
+  ARRAY[0..10] OF INT :=[1,2,3,4];
+END_TYPE
+
+TYPE TUM:
+  STRUCT
+    A : INT := 1;
+    B : INT := 2;
+    C : REAL :=1.2;
+  END_STRUCT;
+END_TYPE
+
+TYPE AI:
+  ARRAY[0..10] OF TUM ;
+END_TYPE
+
+FUNCTION USERA : INT
+
+	VAR_INPUT
+		A : INT;
+	END_VAR
+
+	USERA := A + 3;
+
+END_FUNCTION
+
+PROGRAM MAIN
+	VAR_INPUT
+		IN : INT ;
+	END_VAR
+
+    VAR
+        RET : INT := 2;
+        CC :AI2;
+        EE :AI;
+        DD :TUM;
+        
+    END_VAR
+
+	VAR_OUTPUT
+		OUT1 : INT ;
+        OUT2 : INT ;
+	END_VAR
+
+	RET := SFUN_SERVO_INPUT_UPDATE(0);
+
+	RET := SFUN_RCMODE_READ(0);
+
+    IF IN = 1 OR RET = 1 THEN
+        RET := SFUN_SERVO_POWERON(0);
+    ELSE
+        RET := SFUN_SERVO_POWEROFF(0);
+        RET := SFUN_RCPLC_SERVOFLAG_SET(0);
+    END_IF;
+
+    IF RET = 1 THEN
+    	RET := SFUN_RCPLC_SERVOFLAG_SET(1);
+    	IF RET = 1 THEN
+	    	RET := SFUN_INTERP_UPDATE(0);
+			RET := SFUN_SERVO_OUTPUT_UPDATE(0);
+		END_IF;
+	END_IF;
+
+	(*CC[8]:=123;
+	CC[4]:=CC[8];
+	DD.B :=CC[4]+1;
+	DD.C :=12.0/7.0;
+	EE[2].A :=CC[4];
+	EE[3].B :=CC[4]+2;
+	EE[10].C :=2.3;*)
+	
+	IN:=-123;
+
+	CC[8]:=USERA(IN);
+
+END_PROGRAM
+
+
+CONFIGURATION MAIN_CONFIG
+
+	RESOURCE RES1 ON CPU1
+		VAR_GLOBAL
+			W AT %IB0: BYTE := 0;
+		END_VAR
+
+		TASK fast(INTERVAL := T#8ms, PRIORITY := 90);
+
+		PROGRAM P1 WITH fast: MAIN(IN := W);
+
+
+	END_RESOURCE
+
+END_CONFIGURATION
