@@ -130,6 +130,7 @@ public:
 class struct_type_c{
 public:
     std::string struct_name;
+	std::string variable_name;	//暂时未使用  for wenjie paper
     std::vector<IValue> elements;
 public:
     void print(){

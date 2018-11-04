@@ -1602,6 +1602,7 @@ void *visit(function_block_declaration_c *symbol) {
   temp_function_block_type.insert_vector(pou_info->local_variable,4);//LOCAL_TYPE
   //temp_function_block_type.insert_vector(pou_info->constant_value);
   temp_function_block_type.print();
+  //数据信息另外存储到功能块的描述类（ fb_type_collector ）中
   pre_code_info->fb_type_collector.push_back(temp_function_block_type);
 
   s4o.print(s4o.indent_spaces + "END_FUNCTION_BLOCK\n\n\n");

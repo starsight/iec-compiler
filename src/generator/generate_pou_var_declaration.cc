@@ -508,6 +508,7 @@ void *generate_pou_var_declaration_c::visit(fb_name_decl_c *symbol) {
           break;
       }
   }
+  // 一般说来 var_name_set 中只有一个元素
   for(auto elem : var_name_set){            // 将FB变量加入FB变量集中
       std::cout << "var_name_set:  "<<elem<< std::endl;
       temp_fb_var.fb_name = var_type + " " + elem; // 将FB变量集中的变量名设为类型名+变量名的形式   如："OR_EDGE CC" "OR_EDGE CE"
