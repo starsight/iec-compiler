@@ -1,8 +1,15 @@
+### 18-11-15
+**修改说明**
+调用功能块时，输入参数=input参数+部分in_out参数。原先未曾考虑in_out参数可能传入的影响。`in_out`类型变量如果在输入时赋值，以输入参数为准，没有输入参数以旧值为准。
+预处理阶段不知道输入参数个数，因此所有`in_out`类型变量都会加载，但是最终构成连续寄存器号传入时，会剔除在加载输入参数时已经重新赋值的`in_out`类型变量。
 
+**修改文件说明**
+- 1.`generate_iec.cc`中`void *visit(fb_invocation_c *symbol)`新增`delta_in_out_num`记录传入的变量数来剔除输入的`in_out`类型变量。
+---
 ### 18-05-23
 **修改说明**
 - 1.之前修改的在统一变量信息保存集合中添加了TREF类型的IValue类型变量，但是在`code_linker`中生成编译后的文件不需要此类型变量（使用`continue`直接跳过），这样集合的大小就不能作为下标进行索引。即TREF类型在统一集合中的索引需要剔除，改为采用`origin_index`进行索引而不是位置索引。
-- ２.`translator.cc`的对`TINT`和`TUINT`类型数据长度的修改．
+- 2.`translator.cc`的对`TINT`和`TUINT`类型数据长度的修改．
 
 **修改文件说明**
 - 1.`generate_pou_var_declaration.cc`文件中四处`origin_index`的赋值变化。`origin_index`原来直接等于`array_struct_fb_info_collector.size()`，现在由于需要屏蔽TREF类型，因此修改为如下规则：对于一般的复杂类型，直接为`array_struct_fb_info_collector`集合中最后一个`origin_index+1`，集合为空则为0；对于TREF类型，与集合中最后一个元素`origin_index`值相同，集合为空则为-1。

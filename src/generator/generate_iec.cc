@@ -2577,6 +2577,8 @@ void *visit(fb_invocation_c *symbol) {
     * following two symbols will be NULL, while the other is != NULL.
     * The two may be NULL simultaneously!
     */
+    int delta_in_out_num = std::stoi(pou_info->get_pou_reg_num()); // in_out 类型变量如果在输入时赋值，以输入参数为准，没有输入参数以旧值为准。 
+    
     // formal形式的参数传入 如(INPU1:=98, INPU2:=99) 先不考虑此种情况 18-5-15 TODO
     // generate_pou_invocation.cc void *generate_pou_invocation_c::visit(input_variable_param_assignment_c *symbol)
     if (symbol->   formal_param_list != NULL) {
@@ -2590,7 +2592,7 @@ void *visit(fb_invocation_c *symbol) {
       // 添加形参到寄存器
       reg_base_num = (char *)symbol->nonformal_param_list->accept(temp_pou_invocation);
     }
-    
+    delta_in_out_num = std::stoi(reg_base_num) - delta_in_out_num;
     // 对于FB，还需要mov  inout out local 到寄存器
     //int base_reg = std::stoi(reg_base_num) + fb_var.input_output_index;
     std::string extra_code;
@@ -2600,7 +2602,8 @@ void *visit(fb_invocation_c *symbol) {
     // 写回到fb变量的inout,out,local变量的起始基地址
     int extra_save_base_num = std::stoi(pou_info->get_pou_reg_num());
 
-    for(int i = fb_var.input_output_index,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){
+    for(int i = delta_in_out_num,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){
+    //for(int i = fb_var.input_output_index,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){ 不添加delta_in_out_num前的for循环条件
       extra_code = "mov ";
       
       extra_reg_num = pou_info->get_pou_reg_num();
