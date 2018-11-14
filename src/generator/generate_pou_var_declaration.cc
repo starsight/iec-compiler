@@ -610,8 +610,9 @@ void *generate_pou_var_declaration_c::visit(array_var_init_decl_c *symbol) {
           }*/
           for(IValue &ivalue:temp_array_var.init_value){  //&ivalue
             int num =pou_info->struct_var_collector.size();
-            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为类型名+数组类型名+index的形式
-            
+            temp_struct_var.struct_name =  str + " " + elem.array_name+"_"+std::to_string(num); // 将结构体变量集中的变量名设为结构体类型名+数组类型名+index的形式
+             //ivalue是在array_type_collector中，temp_struct_var是在struct_var_collector中
+
             pou_info->struct_var_collector.push_back(temp_struct_var);
             ivalue.v.value_p.value_index =num;
             ivalue.name = elem.array_name+"_"+std::to_string(num);//突然发现可以直接把信息存到name里，为了程序稳定没有使用这种，但肯定是可以的
