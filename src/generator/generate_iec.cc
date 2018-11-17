@@ -2592,6 +2592,7 @@ void *visit(fb_invocation_c *symbol) {
       // 添加形参到寄存器
       reg_base_num = (char *)symbol->nonformal_param_list->accept(temp_pou_invocation);
     }
+    // delta_in_out_num ： 传入参数的个数
     delta_in_out_num = std::stoi(reg_base_num) - delta_in_out_num;
     // 对于FB，还需要mov  inout out local 到寄存器
     //int base_reg = std::stoi(reg_base_num) + fb_var.input_output_index;
@@ -2600,9 +2601,9 @@ void *visit(fb_invocation_c *symbol) {
     
 // ********************************************************步骤2(结合预处理)
     // 写回到fb变量的inout,out,local变量的起始基地址
-    int extra_save_base_num = std::stoi(pou_info->get_pou_reg_num());
+    int extra_save_base_num = std::stoi(pou_info->get_pou_reg_num())-(delta_in_out_num-fb_var.input_output_index);
 
-    for(int i = delta_in_out_num,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){
+    for(int i = delta_in_out_num,j = delta_in_out_num-fb_var.input_output_index; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){
     //for(int i = fb_var.input_output_index,j = 0; i < fb_var.fb_value.size() && j < extra_var_vector.size(); i++,j++){ 不添加delta_in_out_num前的for循环条件
       extra_code = "mov ";
       
@@ -2626,7 +2627,8 @@ void *visit(fb_invocation_c *symbol) {
     // 保存inout,output,local到对应寄存器,成功运行的前提是运行平台把数据拷贝回了原来的寄存器，
     // 即 "ret (extra_save_base_num)"语句被执行（实际代码为ret 0 0，这样看运行平台的处理），参见谭伯龙论文对ucall/ret语句的解释。
     //temp_code = std::string("mov ") + leftreg + std::string(" ") + rightreg;
-    for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){
+    for(int i = fb_var.input_output_index; i < fb_var.local_index; i++){
+    //for(int i = fb_var.input_output_index; i < fb_var.fb_value.size(); i++){ 剔除local变量的回写
       //extra_code = "mov ";
       save_fb_args_helper(fb_var_index,i,std::to_string(extra_save_base_num));
       extra_save_base_num++;

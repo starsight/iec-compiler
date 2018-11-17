@@ -1,3 +1,11 @@
+### 18-11-17
+**修改说明**
+当有部分in_out参数时，计算偏移及记录寄存器号未及时修改，现修正。
+
+**修改文件说明**
+- 1.`generate_iec.cc`中`void *visit(fb_invocation_c *symbol)`的`delta_in_out_num`意指所有传入的参数个数。需要修改`inout,out,local变量集`的起始位置（不是从头开始，剔除输入的`in_out`变量）；相反，`extra_save_base_num`得补上这些个数，不然保存`inout`变量不全。同时剔除`local`变量的记忆特性，只回写`in_out`和`output`变量。
+---
+
 ### 18-11-15
 **修改说明**
 调用功能块时，输入参数=input参数+部分in_out参数。原先未曾考虑in_out参数可能传入的影响。`in_out`类型变量如果在输入时赋值，以输入参数为准，没有输入参数以旧值为准。
