@@ -43,22 +43,22 @@ PROGRAM MAIN
         OUT2 : INT ;
 	END_VAR
 
-	RET := SFUN_SERVO_INPUT_UPDATE(0);
+	RET := SFUN_SERVO_INPUT_UPDATE(0);(*从伺服映像区读取伺服轴数据并存入RC/软PLC共享内存*)
 
-	RET := SFUN_RCMODE_READ(0);
+	RET := SFUN_RCMODE_READ(0);(*读取RC运行模式（示教｜再现）*)
 
     IF IN = 1 OR RET = 1 THEN
-        RET := SFUN_SERVO_POWERON(0);
+        RET := SFUN_SERVO_POWERON(0); (*伺服上电(通过设置伺服映像区control_word)*)
     ELSE
-        RET := SFUN_SERVO_POWEROFF(0);
-        RET := SFUN_RCPLC_SERVOFLAG_SET(0);
+        RET := SFUN_SERVO_POWEROFF(0);(*伺服伺服下电(通过设置伺服映像区control_word)*)
+        RET := SFUN_RCPLC_SERVOFLAG_SET(0);(*设置RC/PLC共享内存区RC允许位*)
     END_IF;
 
     IF RET = 1 THEN
-    	RET := SFUN_RCPLC_SERVOFLAG_SET(1);
+    	RET := SFUN_RCPLC_SERVOFLAG_SET(1);(*设置RC/PLC共享内存区RC允许位*)
     	IF RET = 1 THEN
-	    	RET := SFUN_INTERP_UPDATE(0);
-			RET := SFUN_SERVO_OUTPUT_UPDATE(0);
+	    	RET := SFUN_INTERP_UPDATE(0); (*从RC/PLC共享内存读取插补值存入缓存*)
+			RET := SFUN_SERVO_OUTPUT_UPDATE(0);(*将缓冲区数据写入伺服映像区*)
 		END_IF;
 	END_IF;
 

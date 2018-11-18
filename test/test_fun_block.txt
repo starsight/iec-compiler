@@ -61,15 +61,16 @@ PROGRAM MAIN
 		CC  : OR_EDGE;
 		CD  : AI;
 		CE  : OR_EDGE;
+		CF  : AI;
     END_VAR
 
 	VAR_OUTPUT
 		OUT1 : INT :=14;
 	END_VAR
 
-	CC(98, 99);
-	OUT1 := IN + 2;
-
+	CE(98,99,100);
+	OUT1 := CE.OUTPU1;
+	OUT1 := CF[1];
 
 END_PROGRAM
 (*
