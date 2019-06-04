@@ -418,6 +418,7 @@ void *generate_array_c::visit(array_specification_c *symbol) {
     for(int i=0;i<array_type->size;i++){
       IValue iv;
       iv.v.value_p.ref_type =str_type;
+      iv.v.value_p.value_index = 0; //无所谓设不设置，只是为了展示效果改为0值 by wenjie 19-04-09
       /*pre_generate_info_c *code_info = pre_generate_info_c::getInstance();//涉及pou初始化部分，不应写在这里
       for(auto elem : code_info->struct_type_collector){ 
         if(elem.struct_name==str_type){

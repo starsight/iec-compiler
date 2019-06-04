@@ -40,6 +40,8 @@ build
 #vs code
 .vscode/*.json
 .vscode/*.bat
+*.bin
+*.ipch
 
 iec_compiler
 translator
